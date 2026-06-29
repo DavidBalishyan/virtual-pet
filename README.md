@@ -1,3 +1,4 @@
+<!-- USEFUL_NOTES.md -->
 # Virtual Pet — Teaching Notes
 
 This file explains the "why" behind concepts that appear in the code but are not obvious from reading the code alone. These are not instructions for building features — those live in `DEV_ROADMAP.md`. This is for when you finish a task and find yourself asking *"but how does that actually work?"*
