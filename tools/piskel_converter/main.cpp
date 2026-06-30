@@ -28,6 +28,7 @@
 #include <iomanip>    // std::setw and std::setfill — formatting hex output with leading zeros
 #include <algorithm>  // std::transform — converting strings to upper/lower case
 #include <cctype>     // std::isalnum, std::isxdigit — testing individual characters
+#include <cinttypes>
 
 // The transparent colour key used by M5Canvas::pushImage().
 // Pixels with this value are skipped during drawing, letting the background

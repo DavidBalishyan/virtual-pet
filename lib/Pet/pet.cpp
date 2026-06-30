@@ -17,7 +17,7 @@ Pet::Pet()
       sick(DEFAULT_SICK), sad(DEFAULT_SAD), cleanliness(DEFAULT_CLEANLINESS),
       energised(DEFAULT_ENERGISED), currentState(STATE_IDLE),
       lastFullnessAlertTime(0), lastSicknessAlertTime(0) {
-    petName = "Donald Trump";
+    petName = "DT";
 }
 
 // getPetName()
