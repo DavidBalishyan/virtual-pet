@@ -8,7 +8,7 @@
 const char* StorageManager::NAMESPACE = "virtual-pet";
 
 // save()
-// Opens the NVS namespace in read/write mode, writes all seven stat values
+// Opens the NVS namespace in read/write mode, writes all eight stat values
 // as integers, then closes the handle. Calling end() commits the data to flash.
 void StorageManager::save(const Pet& pet) {
 #ifdef DEBUG
@@ -25,6 +25,7 @@ void StorageManager::save(const Pet& pet) {
     prefs.putInt("sad",         pet.getSad());
     prefs.putInt("cleanliness", pet.getCleanliness());
     prefs.putInt("energised",   pet.getEnergised());
+    prefs.putInt("hydration",   pet.getHydration());
 
     prefs.end();
 
@@ -53,6 +54,7 @@ void StorageManager::load(Pet& pet) {
     pet.setSad(        prefs.getInt("sad",         Pet::DEFAULT_SAD));
     pet.setCleanliness(prefs.getInt("cleanliness", Pet::DEFAULT_CLEANLINESS));
     pet.setEnergised(  prefs.getInt("energised",   Pet::DEFAULT_ENERGISED));
+    pet.setHydration(  prefs.getInt("hydration",   Pet::DEFAULT_HYDRATION));
 
     prefs.end();
 
@@ -64,6 +66,7 @@ void StorageManager::load(Pet& pet) {
     Serial.print("  sad: ");         Serial.println(pet.getSad());
     Serial.print("  cleanliness: "); Serial.println(pet.getCleanliness());
     Serial.print("  energised: ");   Serial.println(pet.getEnergised());
+    Serial.print("  hydration: ");   Serial.println(pet.getHydration());
 #endif
 }
 

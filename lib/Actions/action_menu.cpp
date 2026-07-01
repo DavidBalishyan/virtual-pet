@@ -4,18 +4,19 @@ ActionMenu::ActionMenu() : currentActionIndex(0) {
     // Each entry carries the action type, display name, description, and
     // which pet stat it affects. The relevantStat field lets the Interact
     // screen highlight the correct bar without needing a separate lookup.
-    actions[0] = {ACTION_FEED,  "Feed",  "Give food to pet",    STAT_FULLNESS};
-    actions[1] = {ACTION_PLAY,  "Play",  "Play with pet",        STAT_HAPPINESS};
-    actions[2] = {ACTION_SLEEP, "Sleep", "Let pet rest",         STAT_ENERGY};
-    actions[3] = {ACTION_BATHE, "Bathe", "Clean the pet",        STAT_CLEANLINESS};
-    actions[4] = {ACTION_HEAL,  "Heal",  "Treat pet illness",    STAT_SICKNESS};
+    actions[0] = {ACTION_FEED,  "Feed",  "Give food to pet",     STAT_FULLNESS};
+    actions[1] = {ACTION_PLAY,  "Play",  "Play with pet",         STAT_HAPPINESS};
+    actions[2] = {ACTION_SLEEP, "Sleep", "Let pet rest",          STAT_ENERGY};
+    actions[3] = {ACTION_BATHE, "Bathe", "Clean the pet",         STAT_CLEANLINESS};
+    actions[4] = {ACTION_HEAL,  "Heal",  "Treat pet illness",     STAT_SICKNESS};
+    actions[5] = {ACTION_DRINK, "Drink", "Give water to pet",     STAT_HYDRATION};
     // Save only appears when persistence is on. Without it, Back moves up to
-    // index 5 so the array stays packed (no empty gap) and matches NUM_ACTIONS.
+    // index 6 so the array stays packed (no empty gap) and matches NUM_ACTIONS.
     #ifdef ENABLE_PERSISTENCE
-    actions[5] = {ACTION_SAVE,  "Save",  "Save pet progress",    STAT_NONE};
-    actions[6] = {ACTION_BACK,  "Back",  "Return to main screen",STAT_NONE};
+    actions[6] = {ACTION_SAVE,  "Save",  "Save pet progress",     STAT_NONE};
+    actions[7] = {ACTION_BACK,  "Back",  "Return to main screen", STAT_NONE};
     #else
-    actions[5] = {ACTION_BACK,  "Back",  "Return to main screen",STAT_NONE};
+    actions[6] = {ACTION_BACK,  "Back",  "Return to main screen", STAT_NONE};
     #endif
 }
 
@@ -101,6 +102,12 @@ void ActionMenu::confirmAction(Pet& pet, DisplayManager& display
             pet.heal();
             #ifdef ENABLE_SOUND
             speaker.playHealSound();
+            #endif
+            break;
+        case ACTION_DRINK:
+            pet.drink();
+            #ifdef ENABLE_SOUND
+            speaker.playDrinkSound();
             #endif
             break;
         #ifdef ENABLE_PERSISTENCE

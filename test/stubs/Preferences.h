@@ -13,4 +13,4 @@ public:
     void end() {}
 };
 
-#endif
+#endif // PREFERENCES_H

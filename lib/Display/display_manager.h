@@ -32,7 +32,7 @@ private:
     // No pet sprite.
     // -----------------------------------------------------------------------
     static constexpr ScreenZone TITLE_ZONE    = {  0,   5, 135, 19 };
-    static constexpr ScreenZone STATS_ZONE    = {  5,  26, 125, 98 };
+    static constexpr ScreenZone STATS_ZONE    = {  5,  26, 125, 130 };
     static constexpr ScreenZone MOOD_ZONE     = {  0, 180, 135, 18 };
     static constexpr ScreenZone MENU_ZONE     = {  5, 220, 125, 20 };
 
@@ -40,8 +40,9 @@ private:
     static constexpr StatBarZone HAPPY_BAR_ZONE  = {  26,  36 };
     static constexpr StatBarZone FULLNESS_BAR_ZONE = {  48,  58 };
     static constexpr StatBarZone ENERGY_BAR_ZONE = {  70,  80 };
-    static constexpr StatBarZone CLEAN_BAR_ZONE  = {  92, 102 };
-    static constexpr StatBarZone SICK_BAR_ZONE   = { 114, 124 };
+    static constexpr StatBarZone CLEAN_BAR_ZONE    = {  92, 102 };
+    static constexpr StatBarZone SICK_BAR_ZONE     = { 114, 124 };
+    static constexpr StatBarZone HYDRATION_BAR_ZONE = { 136, 146 };
 
     // -----------------------------------------------------------------------
     // Main screen zone constants — no stat bars, so the face gets more room.
@@ -114,13 +115,13 @@ private:
     // take an offset.
     void renderMainScreen(int fullness, MoodSprite mood, const char* petName, int spriteOffsetX, int spriteOffsetY);
     #ifdef ENABLE_MULTISCREEN
-    void renderStatsScreen(int happiness, int fullness, int energy, int cleanliness, int sick, MoodSprite mood, const char* petName);
+    void renderStatsScreen(int happiness, int fullness, int energy, int cleanliness, int sick, int hydration, MoodSprite mood, const char* petName);
     #endif
     #ifdef ENABLE_ACTION_MENU
     // The Interact screen needs two pieces of information about the action menu:
     // the action name to display, and which stat bar to highlight. We pass these
     // as primitives so DisplayManager does not need to know what an ActionMenu is.
-    void renderInteractScreen(int happiness, int fullness, int energy, int cleanliness, int sick,
+    void renderInteractScreen(int happiness, int fullness, int energy, int cleanliness, int sick, int hydration,
                               MoodSprite mood, const char* selectedActionName,
                               RelevantStat relevantStat, const char* petName,
                               int spriteOffsetX, int spriteOffsetY);
@@ -139,7 +140,7 @@ private:
     // Draws a single stat bar for the action currently selected on the Interact screen.
     // The bar label, value, and colour are determined by relevantStat.
     // Draws nothing if relevantStat is STAT_NONE (Save / Back actions).
-    void drawContextualStatBar(int happiness, int fullness, int energy, int cleanliness, int sick, RelevantStat relevantStat);
+    void drawContextualStatBar(int happiness, int fullness, int energy, int cleanliness, int sick, int hydration, RelevantStat relevantStat);
     #endif
 
     // Draws just the mood label text at the given Y position.
@@ -175,7 +176,7 @@ public:
     // spriteOffsetX/Y nudge the pet sprite away from its normal centre so it can
     // follow the device tilt. They are plain pixel counts; pass 0, 0
     // to draw the pet dead-centre exactly as before.
-    void renderDisplay(int happiness, int fullness, int energy, int cleanliness, int sick,
+    void renderDisplay(int happiness, int fullness, int energy, int cleanliness, int sick, int hydration,
                        MoodSprite mood, const char* selectedActionName,
                        RelevantStat relevantStat,
                        bool petIsDead, const char* petName, ScreenState screenState,
@@ -184,7 +185,7 @@ public:
     // Pet display helpers — used internally and by the three private render methods
     #ifdef ENABLE_MULTISCREEN
     // Both are used only by the Stats screen: the five-bar readout and its mood label.
-    void showPetStatus(int happiness, int fullness, int energy, int cleanliness, int sick, const char* petName);
+    void showPetStatus(int happiness, int fullness, int energy, int cleanliness, int sick, int hydration, const char* petName);
     void showPetMood(MoodSprite mood);
     #endif
     void showMessage(const char* message);

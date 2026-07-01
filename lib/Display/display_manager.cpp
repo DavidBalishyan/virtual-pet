@@ -56,7 +56,7 @@ void DisplayManager::fillRect(int x, int y, int width, int height, uint32_t colo
 // current index) rather than as an ActionMenu reference. This keeps
 // DisplayManager unaware of ActionMenu — the caller does the extraction.
 void DisplayManager::renderDisplay(int happiness, int fullness, int energy, int cleanliness,
-                                   int sick, MoodSprite mood, const char* selectedActionName,
+                                   int sick, int hydration, MoodSprite mood, const char* selectedActionName,
                                    RelevantStat relevantStat,
                                    bool petIsDead, const char* petName,
                                    ScreenState screenState,
@@ -101,12 +101,12 @@ void DisplayManager::renderDisplay(int happiness, int fullness, int energy, int 
             break;
         #ifdef ENABLE_MULTISCREEN
         case SCREEN_STATS:
-            renderStatsScreen(happiness, fullness, energy, cleanliness, sick, mood, petName);
+            renderStatsScreen(happiness, fullness, energy, cleanliness, sick, hydration, mood, petName);
             break;
         #endif
         #ifdef ENABLE_ACTION_MENU
         case SCREEN_INTERACT:
-            renderInteractScreen(happiness, fullness, energy, cleanliness, sick, mood,
+            renderInteractScreen(happiness, fullness, energy, cleanliness, sick, hydration, mood,
                                  selectedActionName, relevantStat, petName,
                                  spriteOffsetX, spriteOffsetY);
             break;
@@ -191,9 +191,9 @@ void DisplayManager::drawMainNavBar() {
 // -----------------------------------------------------------------------
 #ifdef ENABLE_MULTISCREEN
 void DisplayManager::renderStatsScreen(int happiness, int fullness, int energy, int cleanliness,
-                                       int sick, MoodSprite mood, const char* petName) {
+                                       int sick, int hydration, MoodSprite mood, const char* petName) {
     clearScreen();
-    showPetStatus(happiness, fullness, energy, cleanliness, sick, petName);
+    showPetStatus(happiness, fullness, energy, cleanliness, sick, hydration, petName);
     showPetMood(mood);
 
     // Back hint at the bottom instead of the action menu indicator
@@ -210,7 +210,7 @@ void DisplayManager::renderStatsScreen(int happiness, int fullness, int energy, 
 // -----------------------------------------------------------------------
 #ifdef ENABLE_ACTION_MENU
 void DisplayManager::renderInteractScreen(int happiness, int fullness, int energy, int cleanliness,
-                                          int sick, MoodSprite mood, const char* selectedActionName,
+                                          int sick, int hydration, MoodSprite mood, const char* selectedActionName,
                                           RelevantStat relevantStat, const char* petName,
                                           int spriteOffsetX, int spriteOffsetY) {
     clearScreen();
@@ -218,7 +218,7 @@ void DisplayManager::renderInteractScreen(int happiness, int fullness, int energ
     drawPetSprite(mood, INTERACT_FACE_CENTER_Y, SPRITE_NEUTRAL_PLACEHOLDER_WIDTH, SPRITE_NEUTRAL_PLACEHOLDER_HEIGHT,
                   spriteOffsetX, spriteOffsetY);
     showPetMoodText(mood, INTERACT_MOOD_Y);
-    drawContextualStatBar(happiness, fullness, energy, cleanliness, sick, relevantStat);
+    drawContextualStatBar(happiness, fullness, energy, cleanliness, sick, hydration, relevantStat);
     drawMenuIndicator(selectedActionName, MENU_ZONE.x, MENU_ZONE.y);
 }
 #endif
@@ -235,7 +235,7 @@ void DisplayManager::renderInteractScreen(int happiness, int fullness, int energ
 // that will change keeps the focus on the cause-and-effect link between the
 // selected action and the pet's response.
 void DisplayManager::drawContextualStatBar(int happiness, int fullness, int energy,
-                                           int cleanliness, int sick, RelevantStat relevantStat) {
+                                           int cleanliness, int sick, int hydration, RelevantStat relevantStat) {
     // Clear the area first so the previous bar does not bleed through
     fillRect(INTERACT_STAT_ZONE.x, INTERACT_STAT_ZONE.y,
              INTERACT_STAT_ZONE.width, INTERACT_STAT_ZONE.height, TFT_BLACK);
@@ -250,11 +250,12 @@ void DisplayManager::drawContextualStatBar(int happiness, int fullness, int ener
     uint32_t    color;
 
     switch (relevantStat) {
-        case STAT_HAPPINESS:  label = "Happy";  value = happiness;  color = TFT_GREEN;  break;
-        case STAT_FULLNESS:     label = "Fullness"; value = fullness;     color = TFT_RED;    break;
-        case STAT_ENERGY:     label = "Energy"; value = energy;     color = TFT_BLUE;   break;
-        case STAT_CLEANLINESS:label = "Clean";  value = cleanliness;color = TFT_CYAN;   break;
-        case STAT_SICKNESS:   label = "Sick";   value = sick;       color = TFT_PURPLE; break;
+        case STAT_HAPPINESS:  label = "Happy";     value = happiness;   color = TFT_GREEN;  break;
+        case STAT_FULLNESS:   label = "Fullness";  value = fullness;    color = TFT_RED;    break;
+        case STAT_ENERGY:     label = "Energy";    value = energy;      color = TFT_BLUE;   break;
+        case STAT_CLEANLINESS:label = "Clean";     value = cleanliness; color = TFT_CYAN;   break;
+        case STAT_SICKNESS:   label = "Sick";      value = sick;        color = TFT_PURPLE; break;
+        case STAT_HYDRATION:  label = "Hydration"; value = hydration;   color = TFT_ORANGE; break;
         default:              return;
     }
 
@@ -317,7 +318,7 @@ void DisplayManager::showPetMood(MoodSprite mood) {
 // showPetStatus() — draws all five labelled stat bars using the Stats screen zones.
 // Does not clear the screen — the caller must do that first.
 void DisplayManager::showPetStatus(int happiness, int fullness, int energy, int cleanliness,
-                                   int sick, const char* petName) {
+                                   int sick, int hydration, const char* petName) {
     printCenteredText(petName, TITLE_ZONE.y, TFT_YELLOW, 2);
 
     canvas.setTextSize(1);
@@ -342,6 +343,10 @@ void DisplayManager::showPetStatus(int happiness, int fullness, int energy, int 
     canvas.setCursor(STATS_ZONE.x, SICK_BAR_ZONE.labelY);
     canvas.printf("Sick: %d", sick);
     drawStatusBar(sick, 100, STATS_ZONE.x, SICK_BAR_ZONE.barY, STATS_ZONE.width, TFT_PURPLE);
+
+    canvas.setCursor(STATS_ZONE.x, HYDRATION_BAR_ZONE.labelY);
+    canvas.printf("Hydration: %d", hydration);
+    drawStatusBar(hydration, 100, STATS_ZONE.x, HYDRATION_BAR_ZONE.barY, STATS_ZONE.width, TFT_ORANGE);
 }
 #endif
 

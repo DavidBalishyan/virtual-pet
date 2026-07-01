@@ -37,8 +37,14 @@ public:
     // Plays a two-beep warning at a lower pitch when the pet's sickness is dangerously high.
     void playSicknessAlertSound();
 
+    // Plays a two-beep rising warning when the pet's hydration is dangerously low.
+    void playThirstAlertSound();
+
     // Plays a short two-note ascending chime to confirm that the pet's stats have been saved.
     void playSaveSound();
+
+    // Plays a short gurgling two-note sound for the drink action.
+    void playDrinkSound();
 };
 
 #endif

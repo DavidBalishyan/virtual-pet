@@ -142,3 +142,26 @@ void SpeakerManager::playSaveSound() {
     delay(180);
     M5.Speaker.stop();
 }
+
+// playThirstAlertSound()
+// Two rising beeps — G5 then C6 — a bright, insistent warning that the pet needs water.
+// Higher in pitch than the hunger alert so the user can distinguish them by ear.
+void SpeakerManager::playThirstAlertSound() {
+    M5.Speaker.tone(784, 100);  // G5
+    delay(120);
+    M5.Speaker.stop();
+    delay(80);
+    M5.Speaker.tone(1047, 100); // C6
+    delay(120);
+    M5.Speaker.stop();
+}
+
+// playDrinkSound()
+// A quick descending two-note "glug" — E5 then C5 — to suggest drinking.
+void SpeakerManager::playDrinkSound() {
+    M5.Speaker.tone(659, 100);  // E5
+    delay(120);
+    M5.Speaker.tone(523, 150);  // C5
+    delay(180);
+    M5.Speaker.stop();
+}

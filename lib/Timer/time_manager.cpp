@@ -9,7 +9,7 @@
 // ---------------------------------------------------------------------------
 // STAT BALANCE — two complete sets of decay rates.
 //
-// The pet has three fatal stats: fullness, energy and happiness (all die at 0).
+// The pet has four fatal stats: fullness, energy, happiness and hydration (all die at 0).
 // These constants decide how fast each one moves, and therefore how
 // long the pet survives if you ignore it. Getting them right is "balancing" how
 // the pet behaves — too fast and the pet is impossible to keep alive, too slow
@@ -38,7 +38,7 @@
 // ---------------------------------------------------------------------------
 #ifdef FAST_TEST
 
-// --- QUICK-TEST set: the pet starves in under a minute (fullness empties first). ---
+// --- QUICK-TEST set: the pet starves or dehydrates in under a minute (fullness empties first). ---
 const unsigned long FULLNESS_DECAY_INTERVAL = 600;         // fullness -1 every 0.6 s (empties first)
 const int FULLNESS_DECAY_AMOUNT = 1;
 const unsigned long HAPPINESS_DECAY_INTERVAL = 1000;        // happiness -1 every 1 s
@@ -49,10 +49,12 @@ const unsigned long CLEANLINESS_DECAY_INTERVAL = 1500;      // cleanliness -1 ev
 const int CLEANLINESS_DECAY_AMOUNT = 1;
 const unsigned long SICKNESS_ACCUMULATION_INTERVAL = 1500;  // sickness +1 every 1.5 s (secondary)
 const int SICKNESS_ACCUMULATION_AMOUNT = 1;
+const unsigned long HYDRATION_DECAY_INTERVAL = 800;          // hydration -1 every 0.8 s (third fatal)
+const int HYDRATION_DECAY_AMOUNT = 1;
 
 #else
 
-// --- SHIPPED set: the pet starves in about 8 minutes (fullness empties first). ---
+// --- SHIPPED set: the pet starves or dehydrates in about 8 minutes (fullness empties first). ---
 const unsigned long FULLNESS_DECAY_INTERVAL = 6000;        // fullness -1 every 6 s (empties first)
 const int FULLNESS_DECAY_AMOUNT = 1;
 const unsigned long HAPPINESS_DECAY_INTERVAL = 9000;        // happiness -1 every 9 s
@@ -66,6 +68,11 @@ const unsigned long CLEANLINESS_DECAY_INTERVAL = 10000;     // cleanliness -1 ev
 const int CLEANLINESS_DECAY_AMOUNT = 1;
 const unsigned long SICKNESS_ACCUMULATION_INTERVAL = 10000; // sickness +1 every 10 s
 const int SICKNESS_ACCUMULATION_AMOUNT = 1;
+// Hydration is as fatal as fullness: it kills when it reaches 0.
+// Tuned to empty about 1.5× slower than fullness so the drink action
+// is important but not quite as urgent as feeding.
+const unsigned long HYDRATION_DECAY_INTERVAL = 9000;        // hydration -1 every 9 s
+const int HYDRATION_DECAY_AMOUNT = 1;
 
 #endif
 
@@ -81,7 +88,8 @@ TimerManager::TimerManager()
       lastHappinessDecayTime(0),
       lastEnergyDrainTime(0),
       lastCleanlinessDecayTime(0),
-      lastSicknessAccumulationTime(0) {
+      lastSicknessAccumulationTime(0),
+      lastHydrationDecayTime(0) {
 }
 
 
@@ -94,6 +102,7 @@ void TimerManager::update(Pet& pet) {
     applyEnergyDrain(pet);
     applyCleanlinessDecay(pet);
     applySicknessAccumulation(pet);
+    applyHydrationDecay(pet);
 }
 
 
@@ -162,5 +171,19 @@ void TimerManager::applySicknessAccumulation(Pet& pet) {
             pet.setSick(pet.getSick() + SICKNESS_ACCUMULATION_AMOUNT);
             lastSicknessAccumulationTime = currentTime;
         }
+    }
+}
+
+
+// applyHydrationDecay()
+// Checks whether HYDRATION_DECAY_INTERVAL milliseconds have passed since
+// hydration was last decreased. If yes, decreases hydration and resets the timer.
+// The pet gets thirstier over time whether you give it water or not.
+void TimerManager::applyHydrationDecay(Pet& pet) {
+    unsigned long currentTime = millis();
+
+    if (currentTime - lastHydrationDecayTime > HYDRATION_DECAY_INTERVAL) {
+        pet.setHydration(pet.getHydration() - HYDRATION_DECAY_AMOUNT);
+        lastHydrationDecayTime = currentTime;
     }
 }

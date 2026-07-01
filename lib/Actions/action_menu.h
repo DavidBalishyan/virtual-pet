@@ -45,6 +45,7 @@ enum ActionType {
     ACTION_SLEEP,
     ACTION_BATHE,
     ACTION_HEAL,
+    ACTION_DRINK,
     #ifdef ENABLE_PERSISTENCE
     ACTION_SAVE,   // Only exists when persistence is on — it writes the pet to NVS
     #endif
@@ -69,9 +70,9 @@ private:
     // wraps the selection around using NUM_ACTIONS.
     static const int NUM_ACTIONS =
         #ifdef ENABLE_PERSISTENCE
-        7;  // Feed, Play, Sleep, Bathe, Heal, Save, Back
+        8;  // Feed, Play, Sleep, Bathe, Heal, Drink, Save, Back
         #else
-        6;  // Feed, Play, Sleep, Bathe, Heal, Back
+        7;  // Feed, Play, Sleep, Bathe, Heal, Drink, Back
         #endif
     Action actions[NUM_ACTIONS];
     int currentActionIndex;

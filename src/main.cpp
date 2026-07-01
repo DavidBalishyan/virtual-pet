@@ -91,9 +91,9 @@ void printPetStateToSerial() {
     }
     lastPrintTime = millis();
 
-    Serial.printf("Fullness:%d  Happy:%d  Energy:%d  Clean:%d  Sick:%d\n",
+    Serial.printf("Fullness:%d  Happy:%d  Energy:%d  Clean:%d  Sick:%d  Hydration:%d\n",
                   myPet.getFullness(), myPet.getHappy(), myPet.getEnergised(),
-                  myPet.getCleanliness(), myPet.getSick());
+                  myPet.getCleanliness(), myPet.getSick(), myPet.getHydration());
 }
 #endif
 
@@ -190,7 +190,8 @@ void renderCurrentScreen() {
 
     display.renderDisplay(
         myPet.getHappy(), myPet.getFullness(), myPet.getEnergised(),
-        myPet.getCleanliness(), myPet.getSick(), myPet.computeMood(),
+        myPet.getCleanliness(), myPet.getSick(), myPet.getHydration(),
+        myPet.computeMood(),
         selectedActionName,
         selectedActionStat,
         myPet.isInDeadState(), myPet.getPetName(),

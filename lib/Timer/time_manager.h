@@ -46,6 +46,9 @@ private:
     // Tracks when sickness was last increased.
     unsigned long lastSicknessAccumulationTime;
 
+    // Tracks when hydration was last decreased.
+    unsigned long lastHydrationDecayTime;
+
     // -----------------------------------------------------------------
     // Private helper methods — one per stat that changes automatically.
     // Keeping each rule in its own function makes them easy to find,
@@ -71,4 +74,8 @@ private:
     // Increases sickness when cleanliness is dangerously low.
     // A dirty pet gradually becomes unwell — bathing prevents this.
     void applySicknessAccumulation(Pet& pet);
+
+    // Decreases hydration by a fixed amount every few seconds.
+    // The pet gets thirstier whether you interact with it or not.
+    void applyHydrationDecay(Pet& pet);
 };

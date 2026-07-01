@@ -17,6 +17,7 @@ enum PetState {
     STATE_SICK,      // Entered automatically when sick stat is high — pet is unwell
     STATE_HEALING,   // Triggered by heal() — pet is receiving treatment
     STATE_BATHING,   // Triggered by bathe() — pet is being cleaned
+    STATE_DRINKING,  // Triggered by drink() — pet is drinking
     STATE_DEAD       // Entered when any critical stat reaches a fatal level
 };
 
@@ -36,6 +37,7 @@ private:
     int sad;          // 0 = neutral, 100 = very sad
     int cleanliness;  // 0 = dirty, 100 = very clean
     int energised;    // 0 = no energy, 100 = full energy
+    int hydration;    // 0 = dehydrated, 100 = well-hydrated
 
     PetState currentState;  // Which behaviour the pet is currently in
 
@@ -45,15 +47,18 @@ private:
     // The pet plays each alert at most once per interval (see updateState()).
     unsigned long lastFullnessAlertTime;
     unsigned long lastSicknessAlertTime;
+    unsigned long lastThirstAlertTime;
 
     // The level at which each alert fires: fullness alerts when it drops this
     // LOW (the pet is getting hungry), sickness alerts when it climbs this HIGH.
     static const int FULLNESS_ALERT_THRESHOLD = 20;
     static const int SICKNESS_ALERT_THRESHOLD = 80;
+    static const int HYDRATION_ALERT_THRESHOLD = 20;
 
     // How many milliseconds must pass between consecutive alerts.
     static const unsigned long FULLNESS_ALERT_INTERVAL   = 15000;
     static const unsigned long SICKNESS_ALERT_INTERVAL = 15000;
+    static const unsigned long THIRST_ALERT_INTERVAL   = 15000;
 
     // constrainValue() — returns value forced into the legal 0..100 range.
     int constrainValue(int value) const;
@@ -68,6 +73,7 @@ public:
     static const int DEFAULT_SAD         = 10;
     static const int DEFAULT_CLEANLINESS = 80;
     static const int DEFAULT_ENERGISED   = 80;
+    static const int DEFAULT_HYDRATION   = 80;
 
     // Constructor
     Pet();
@@ -80,6 +86,7 @@ public:
     int getSad() const;
     int getCleanliness() const;
     int getEnergised() const;
+    int getHydration() const;
 
     // Setters for each condition
     void setFullness(int value);
@@ -89,6 +96,7 @@ public:
     void setSad(int value);
     void setCleanliness(int value);
     void setEnergised(int value);
+    void setHydration(int value);
 
     // Utility methods for pet care
     void feed();           // Increases fullness, increases happy
@@ -96,13 +104,14 @@ public:
     void play();           // Increases happy, increases tired, decreases energised
     void bathe();          // Increases cleanliness, decreases tired
     void heal();           // Decreases sick
+    void drink();          // Increases hydration
     
     // Works out the pet's current visual mood from its stats.
     // Returns a MoodSprite (defined in ../Display/screen_layout.h); the
     // display uses it to pick the sprite picture and the mood word.
     MoodSprite computeMood() const;
 
-    // Returns true if any stat has reached a fatal level (fullness=0, energy=0, or happy=0)
+    // Returns true if any stat has reached a fatal level (fullness=0, energy=0, happy=0, or hydration=0)
     bool isDead() const;
 
     // Returns the pet's display name for use in the title zone

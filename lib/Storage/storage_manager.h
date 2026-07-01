@@ -15,11 +15,11 @@ private:
     static const char* NAMESPACE;
 
 public:
-    // Writes all seven pet stats to NVS so they survive a power-off.
+    // Writes all eight pet stats to NVS so they survive a power-off.
     // Call this when the user confirms the Save action.
     void save(const Pet& pet);
 
-    // Reads all seven pet stats from NVS and applies them to the pet.
+    // Reads all eight pet stats from NVS and applies them to the pet.
     // If no save data exists yet, each stat falls back to the pet's default starting value.
     // Call this once in setup() before the main loop begins.
     void load(Pet& pet);

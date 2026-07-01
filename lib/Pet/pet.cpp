@@ -15,8 +15,9 @@
 Pet::Pet()
     : fullness(DEFAULT_FULLNESS), tired(DEFAULT_TIRED), happy(DEFAULT_HAPPY),
       sick(DEFAULT_SICK), sad(DEFAULT_SAD), cleanliness(DEFAULT_CLEANLINESS),
-      energised(DEFAULT_ENERGISED), currentState(STATE_IDLE),
-      lastFullnessAlertTime(0), lastSicknessAlertTime(0) {
+      energised(DEFAULT_ENERGISED), hydration(DEFAULT_HYDRATION),
+      currentState(STATE_IDLE),
+      lastFullnessAlertTime(0), lastSicknessAlertTime(0), lastThirstAlertTime(0) {
     petName = "DT";
 }
 
@@ -44,6 +45,7 @@ int Pet::getSick() const        { return sick; }
 int Pet::getSad() const         { return sad; }
 int Pet::getCleanliness() const { return cleanliness; }
 int Pet::getEnergised() const   { return energised; }
+int Pet::getHydration() const   { return hydration; }
 
 // Setters
 // Each setter stores the new value after passing it through constrainValue()
@@ -58,6 +60,7 @@ void Pet::setSick(int value)        { sick        = constrainValue(value); }
 void Pet::setSad(int value)         { sad         = constrainValue(value); }
 void Pet::setCleanliness(int value) { cleanliness = constrainValue(value); }
 void Pet::setEnergised(int value)   { energised   = constrainValue(value); }
+void Pet::setHydration(int value)   { hydration   = constrainValue(value); }
 
 // Pet care actions
 // Each action changes the pet's state, then adjusts several stats by routing
@@ -101,6 +104,12 @@ void Pet::heal() {
     setSick(sick - 50);                      // Reduce sickness
     setTired(tired + 20);                    // Medicine makes pet tired
     setHappy(happy - 5);                     // Unpleasant experience
+}
+
+void Pet::drink() {
+    setState(STATE_DRINKING);                // Signal that the pet is now drinking
+    setHydration(hydration + 30);            // Rehydrate significantly
+    setFullness(fullness - 5);               // Drinking slightly reduces fullness (stomach space)
 }
 
 // getState()
@@ -164,6 +173,14 @@ void Pet::updateState(
             lastSicknessAlertTime = millis();
         }
     }
+
+    // Check whether a low-hydration (thirst) alert is due.
+    if (hydration <= HYDRATION_ALERT_THRESHOLD) {
+        if (millis() - lastThirstAlertTime >= THIRST_ALERT_INTERVAL) {
+            speaker.playThirstAlertSound();
+            lastThirstAlertTime = millis();
+        }
+    }
     #endif
 
     switch (currentState) {
@@ -203,6 +220,11 @@ void Pet::updateState(
             setState(STATE_IDLE);
             break;
 
+        case STATE_DRINKING:
+            // Drinking is handled instantly by drink() — return to idle
+            setState(STATE_IDLE);
+            break;
+
         case STATE_DEAD:
             // Nothing to do here — main.cpp handles the death screen and restart button.
             break;
@@ -212,7 +234,8 @@ void Pet::updateState(
 // isDead()
 // Checks whether any critical stat has reached a fatal level.
 // Fullness at 0 means the pet has starved. Energy or happiness at 0 means
-// the pet has given up. Any one of these ends the pet's life.
+// the pet has given up. Hydration at 0 means the pet has dehydrated.
+// Any one of these ends the pet's life.
 bool Pet::isDead() const {
     if (fullness <= 0) {
         return true;
@@ -221,6 +244,9 @@ bool Pet::isDead() const {
         return true;
     }
     if (happy <= 0) {
+        return true;
+    }
+    if (hydration <= 0) {
         return true;
     }
     return false;
@@ -244,11 +270,13 @@ void Pet::reset(
     sad         = DEFAULT_SAD;
     cleanliness = DEFAULT_CLEANLINESS;
     energised   = DEFAULT_ENERGISED;
+    hydration   = DEFAULT_HYDRATION;
     currentState = STATE_IDLE;  // Clear death state so the next updateState() starts fresh
 
     // Clear the alert timers so no leftover rate-limit state carries into the new life.
     lastFullnessAlertTime  = 0;
     lastSicknessAlertTime = 0;
+    lastThirstAlertTime    = 0;
 
     #ifdef ENABLE_SOUND
     // Play the restart fanfare. The pet owns this lifecycle sound, just like its

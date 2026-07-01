@@ -62,6 +62,7 @@ enum RelevantStat {
     STAT_ENERGY,
     STAT_CLEANLINESS,
     STAT_SICKNESS,
+    STAT_HYDRATION,
     STAT_NONE
 };
 

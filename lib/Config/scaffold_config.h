@@ -37,12 +37,12 @@
 //                                   and the four mood faces
 // -------------------------------------------------------------------------
 
-// #define ENABLE_ACTION_MENU
-// #define ENABLE_IMU_PLAY
-// #define ENABLE_SOUND
-// #define ENABLE_PERSISTENCE
-// #define ENABLE_MULTISCREEN
-// #define ENABLE_MOOD_SPRITES
+#define ENABLE_ACTION_MENU
+#define ENABLE_IMU_PLAY
+#define ENABLE_SOUND
+#define ENABLE_PERSISTENCE
+#define ENABLE_MULTISCREEN
+#define ENABLE_MOOD_SPRITES
 
 // -------------------------------------------------------------------------
 // Rule between switches: the "Save" action lives inside the action menu, so

@@ -29,6 +29,8 @@
 
 class M5Unified {
 public:
+    void begin() {}
+    void update() {}
     class Display {
     public:
         void fillScreen(uint32_t) {}
@@ -79,4 +81,4 @@ public:
 
 inline M5Unified M5;
 
-#endif
+#endif // M5STICKCPLUS2_H
