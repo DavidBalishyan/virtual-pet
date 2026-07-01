@@ -1,18 +1,16 @@
 # Virtual Pet
 
-A Tamagotchi-style virtual pet that runs on the **M5StickC Plus 2** (ESP32), built piece by piece over a 10-session embedded C++ course.
+A Tamagotchi-style virtual pet for the **M5StickC Plus 2** (ESP32), built over a 10-session embedded C++ course.
 
-Shake it. Feed it. Watch it get hungry. If you ignore it long enough, it dies. Press a button and start again — that's the whole loop.
+You feed it, play with it, put it to sleep. Ignore it and it dies. Press a button and start over. That's the whole thing.
 
 ---
 
 ## What it does
 
-The pet lives on the little 135x240 LCD. It has eight stats that tick up and down on their own — fullness, happiness, energy, cleanliness, sickness, hydration, tiredness, sadness. You keep it alive by picking actions from a menu: Feed, Play, Sleep, Bathe, Heal, Drink. Each action bumps one stat at the cost of another (play makes the pet happy but drains its energy). Let any critical stat hit zero and the pet dies. Press A on the death screen to start a new life.
+The pet lives on a 135x240 colour screen. It has stats that tick up and down on their own - fullness, happiness, energy, cleanliness, sickness, hydration, tiredness, sadness. You keep it alive through a menu: Feed, Play, Sleep, Bathe, Heal, Drink. Each action boosts one stat but costs another (playing makes the pet happy but tires it out). Let a critical stat hit zero and the pet dies. Press A on the death screen to respawn.
 
-It has moods, too. The sprite changes depending on how the pet is feeling — neutral, happy, hungry, unwell, thirsty. The mood is computed from the stats, so the face always matches.
-
-You can also tilt the device to slide the sprite around the screen, or give it a shake to trigger play time from anywhere.
+The sprite changes with the pet's mood - neutral, happy, hungry, unwell, thirsty - computed from its stats. You can tilt the device to slide the sprite around, or shake it to trigger play time from any screen.
 
 ---
 
@@ -46,44 +44,21 @@ pio test -e native
 
 ---
 
-## Project structure
+## How it ticks
 
-```
-lib/
-  Config/        Feature switches that turn each session's code on/off
-  Pet/           The pet itself — stats, actions, mood computation, state machine
-  Display/       Screen drawing, sprite rendering, animation timing, layout
-  Button/        Button A/B/C edge detection
-  Imu/           Accelerometer reads, shake detection, tilt motion smoothing
-  Timer/         Background stat decay — the pet gets hungry on its own
-  Actions/       The Feed / Play / Sleep / … menu
-  Navigation/    Screen transitions (Main, Stats, Interact)
-  Speaker/       Buzzer melodies for events and alerts
-  Storage/       Save and load stats to NVS flash
-  Wireless/      WiFi access point and web dashboard
-src/main.cpp     The single entry point — setup + loop, ties everything together
-test/            Unit tests (Unity framework, runnable on PC)
-tools/           Sprite conversion utilities
-assets/          Raw sprite artwork
-```
+Boot, init hardware, then loop forever. Each loop does three things:
 
----
+1. **Read inputs** - which buttons were pressed, what the accelerometer says, was it shaken.
+2. **Update the pet** - stats decay on their own timer, state machine runs (eating? sleeping? dead?), handle whatever action the player picked.
+3. **Draw the screen** - sprite, mood text, stat bars, nav tabs.
 
-## How it works
-
-The device boots, initialises the hardware, and enters a forever-loop. Each iteration of that loop does three things:
-
-1. **Read inputs** — which buttons were pressed, what the accelerometer says, whether the device was shaken.
-2. **Update the pet** — apply background stat decay on its own timer, run the state machine (is the pet eating? sleeping? dead?), handle any action the user selected.
-3. **Render the screen** — draw the sprite, the mood word, the stat bars, the navigation tabs.
-
-Every module has a single job. The action menu doesn't know how to draw. The display manager doesn't know what a Pet object is — it just takes plain numbers and sprites. The navigation manager doesn't know what actions exist. This keeps each piece readable on its own.
+Every module has one job. The menu doesn't draw. The display doesn't know what a Pet is - it just takes numbers and sprites. Navigation doesn't know what actions exist. Each piece stays readable on its own.
 
 ---
 
 ## Feature switches
 
-The project is designed as a cumulative curriculum. Every major feature is wrapped in an `#ifdef`:
+The project is a cumulative curriculum. Every major feature is wrapped in an `#ifdef`:
 
 | Flag | What it enables | Session |
 |---|---|---|
@@ -102,29 +77,26 @@ Flip them on and off in `lib/Config/scaffold_config.h` to see the project at eac
 
 ## Web dashboard
 
-When `ENABLE_WIRELESS` is on, the pet broadcasts a WiFi access point called `VirtualPet` and serves a live stats dashboard at `http://192.168.4.1/`.
+With `ENABLE_WIRELESS` on, the pet starts a WiFi access point called `VirtualPet` and serves a live stats dashboard at `http://192.168.4.1/`.
 
-Connect your phone or laptop to the `VirtualPet` network — no password — then open that address in a browser. You'll see all eight stats as coloured progress bars, the pet's current mood as a badge, and its name. The page auto-refreshes every three seconds so you can watch the numbers change in real time without looking at the device screen. If the pet dies, a bold red notice appears at the bottom of the page.
+Connect your phone to the `VirtualPet` network (no password), open that address, and you'll see all eight stats as coloured bars, the pet's mood, and its name. The page refreshes every three seconds. If the pet dies, a red notice shows up at the bottom.
 
-The whole thing runs on the device itself — the ESP32's softAP mode means no router or internet connection is needed. The pet is the server.
-
-Implementation lives in `lib/Wireless/wireless_manager.cpp`. It uses the Arduino `WebServer` library and builds the HTML page as plain string concatenation (no templates, no filesystem). The dashboard is deliberately kept to a single page with inline CSS so there's nothing to cache or serve beyond one HTTP response.
+No router or internet needed - the pet is the server. Implementation is in `lib/Wireless/wireless_manager.cpp`.
 
 ---
 
 ## Tests
 
-Three test suites cover the hardware-independent modules:
-
-```
+```bash
 pio test -e native
 ```
 
-- **test_pet** (35 tests) — stats, actions, state machine, moods, death, reset
-- **test_animation_manager** (8 tests) — frame cycling, wrap-around, reset
-- **test_tilt_motion** (8 tests) — smoothing, clamping, self-recentre
+Three suites cover the hardware-independent bits:
+- **test_pet** (35 tests) - stats, actions, state machine, moods, death, reset
+- **test_animation_manager** (8 tests) - frame cycling, wrap-around, reset
+- **test_tilt_motion** (8 tests) - smoothing, clamping, self-recentre
 
-The tests compile the real source files from `lib/` against a stub `Arduino.h` so they run on a PC with no hardware attached.
+The tests compile the real source files against a stub `Arduino.h` so they run on a PC.
 
 ---
 
