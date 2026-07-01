@@ -299,6 +299,7 @@ void DisplayManager::showPetMoodText(MoodSprite mood, int textY) {
         case MOOD_HAPPY:  moodText = "Happy";   moodColor = TFT_GREEN;  break;
         case MOOD_UNWELL: moodText = "Unwell";  moodColor = TFT_PURPLE; break;
         case MOOD_HUNGRY: moodText = "Hungry";  moodColor = TFT_RED;    break;
+        case MOOD_THIRSTY: moodText = "Thirsty"; moodColor = TFT_ORANGE; break;
         #endif
         case MOOD_NEUTRAL:
         default:          moodText = "Neutral"; moodColor = TFT_WHITE;  break;
@@ -364,6 +365,7 @@ const uint16_t* DisplayManager::spriteForMood(MoodSprite mood, int frame) {
         case MOOD_HAPPY:   return sprite_happy_placeholder[frame];
         case MOOD_UNWELL:  return sprite_unwell_placeholder[frame];
         case MOOD_HUNGRY:  return sprite_hungry_placeholder[frame];
+        case MOOD_THIRSTY: return sprite_thirsty_placeholder[frame];
         #endif
         case MOOD_NEUTRAL:
         default:           return sprite_neutral_placeholder[frame];

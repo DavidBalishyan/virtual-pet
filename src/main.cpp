@@ -17,6 +17,9 @@
 #ifdef ENABLE_PERSISTENCE
 #include "../lib/Storage/storage_manager.h"
 #endif
+#ifdef ENABLE_WIRELESS
+#include "../lib/Wireless/wireless_manager.h"
+#endif
 
 // -------------------------------------------------------------------------
 // SPRITE_TEST — quick render test for Task 12.
@@ -58,6 +61,9 @@ SpeakerManager  speaker;  // Plays buzzer melodies for pet events and alerts.
 #endif
 #ifdef ENABLE_PERSISTENCE
 StorageManager  storage;  // Saves and loads pet stats to NVS flash storage.
+#endif
+#ifdef ENABLE_WIRELESS
+WirelessManager wireless; // Broadcasts a WiFi AP and serves the web dashboard.
 #endif
 
 // handleDeathScreen() — the only interaction once the pet has died: pressing
@@ -247,6 +253,13 @@ void setup() {
     storage.load(myPet);
     #endif
 
+    #ifdef ENABLE_WIRELESS
+    // Start the WiFi access point and web dashboard so a phone or laptop can
+    // view the pet's live stats by connecting to the AP and opening a browser.
+    // Must come after storage.load() so the page shows the real saved stats.
+    wireless.begin(myPet);
+    #endif
+
     display.showMessage("Virtual Pet initialized!");
     delay(2000);
 }
@@ -258,6 +271,9 @@ void loop() {
 
     M5.update();      // Read the latest hardware state (buttons, IMU, etc.)
     buttons.update(); // Detect which buttons were pressed this frame
+    #ifdef ENABLE_WIRELESS
+    wireless.handleClient();  // Process any incoming web request
+    #endif
     #ifdef ENABLE_IMU_PLAY
     imu.update();     // Read fresh accelerometer data and update shake detection
 

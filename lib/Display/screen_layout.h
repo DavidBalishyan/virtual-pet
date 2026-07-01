@@ -91,7 +91,8 @@ enum MoodSprite {
     MOOD_NEUTRAL,
     MOOD_HAPPY,
     MOOD_UNWELL,
-    MOOD_HUNGRY
+    MOOD_HUNGRY,
+    MOOD_THIRSTY
 };
 
 #endif

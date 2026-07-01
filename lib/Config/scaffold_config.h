@@ -35,6 +35,7 @@
 //   Session 5  ENABLE_PERSISTENCE — save and load the pet (the Save action)
 //   Session 6  ENABLE_MULTISCREEN + ENABLE_MOOD_SPRITES — the Stats screen
 //                                   and the four mood faces
+//   Session 7  ENABLE_WIRELESS — WiFi AP + web dashboard
 // -------------------------------------------------------------------------
 
 #define ENABLE_ACTION_MENU
@@ -43,6 +44,7 @@
 #define ENABLE_PERSISTENCE
 #define ENABLE_MULTISCREEN
 #define ENABLE_MOOD_SPRITES
+#define ENABLE_WIRELESS
 
 // -------------------------------------------------------------------------
 // Rule between switches: the "Save" action lives inside the action menu, so

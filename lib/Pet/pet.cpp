@@ -309,6 +309,9 @@ MoodSprite Pet::computeMood() const {
     if (fullness < 30) {
         return MOOD_HUNGRY;
     }
+    if (hydration < 30) {
+        return MOOD_THIRSTY;
+    }
     if (happy > 70) {
         return MOOD_HAPPY;
     }

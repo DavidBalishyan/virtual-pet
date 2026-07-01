@@ -12,6 +12,7 @@
 #include "sprites/happy_placeholder.h"
 #include "sprites/unwell_placeholder.h"
 #include "sprites/hungry_placeholder.h"
+#include "sprites/thirsty_placeholder.h"
 #endif
 #include "animation_manager.h"   // decides which sprite frame to draw each loop
 
