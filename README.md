@@ -113,6 +113,8 @@ The tests compile the real source files against a stub `Arduino.h` so they run o
 - <https://www.perl.org>
 - <https://pipx.pypa.io/stable/how-to/install-pipx>
 - <https://www.doxygen.nl>
+- <https://en.wikipedia.org/wiki/ESP32>
+- <https://en.wikipedia.org/wiki/Real-time_clock>
 
 ---
 ## License

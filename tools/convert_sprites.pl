@@ -24,7 +24,7 @@ for my $file (@files) {
         if (/FRAME_WIDTH\s+(\d+)/)   { $width  = $1 }
         if (/FRAME_HEIGHT\s+(\d+)/)  { $height = $1 }
     }
-    die "Missing metadata in $file" unless $frames && $width && $height;
+    die "[convert_sprites] Missing metadata in $file" unless $frames && $width && $height;
 
     my $total = $width * $height;
 
@@ -37,7 +37,7 @@ for my $file (@files) {
     }
 
     my $expected = $frames * $total;
-    die "Expected $expected pixels in $file, got " . scalar(@pixels) if @pixels != $expected;
+    die "[convert_sprites] Expected $expected pixels in $file, got " . scalar(@pixels) if @pixels != $expected;
 
     (my $name = $file) =~ s/\.c$//;
     my $def_name = uc($name);
@@ -47,7 +47,7 @@ for my $file (@files) {
     (my $var_name = $label) =~ s/^(.)/\l$1/;
 
     my $out_path = "$OUT_DIR/" . lc($name) . ".h";
-    open(my $out, ">", $out_path) or die "Cannot write $out_path: $!";
+    open(my $out, ">", $out_path) or die "[convert_sprites] Cannot write $out_path: $!";
 
     print $out "#pragma once\n";
     print $out "#include <stdint.h>\n";
@@ -126,5 +126,5 @@ for my $file (@files) {
     }
     print $out "};\n";
     close $out;
-    print "Generated: $out_path\n";
+    print "[convert_sprites] Generated: $out_path\n";
 }

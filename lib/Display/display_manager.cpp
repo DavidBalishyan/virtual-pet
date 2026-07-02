@@ -60,7 +60,8 @@ void DisplayManager::renderDisplay(int happiness, int fullness, int energy, int 
                                    RelevantStat relevantStat,
                                    bool petIsDead, const char* petName,
                                    ScreenState screenState,
-                                   int spriteOffsetX, int spriteOffsetY) {
+                                   int spriteOffsetX, int spriteOffsetY,
+                                   int clockHours, int clockMinutes) {
     // --- Death state ---
     // Draw the death screen once when the pet first dies, then hold it.
     // The petWasDeadLastFrame flag prevents redrawing the death screen every frame.
@@ -101,7 +102,8 @@ void DisplayManager::renderDisplay(int happiness, int fullness, int energy, int 
             break;
         #ifdef ENABLE_MULTISCREEN
         case SCREEN_STATS:
-            renderStatsScreen(happiness, fullness, energy, cleanliness, sick, hydration, mood, petName);
+            renderStatsScreen(happiness, fullness, energy, cleanliness, sick, hydration, mood, petName,
+                              clockHours, clockMinutes);
             break;
         #endif
         #ifdef ENABLE_ACTION_MENU
@@ -191,10 +193,16 @@ void DisplayManager::drawMainNavBar() {
 // -----------------------------------------------------------------------
 #ifdef ENABLE_MULTISCREEN
 void DisplayManager::renderStatsScreen(int happiness, int fullness, int energy, int cleanliness,
-                                       int sick, int hydration, MoodSprite mood, const char* petName) {
+                                       int sick, int hydration, MoodSprite mood, const char* petName,
+                                       int clockHours, int clockMinutes) {
     clearScreen();
     showPetStatus(happiness, fullness, energy, cleanliness, sick, hydration, petName);
     showPetMood(mood);
+
+    // Draw the clock readout between the last stat bar and the mood word.
+    char timeStr[6];
+    snprintf(timeStr, sizeof(timeStr), "%02d:%02d", clockHours, clockMinutes);
+    printCenteredText(timeStr, CLOCK_Y, TFT_CYAN, 1);
 
     // Back hint at the bottom instead of the action menu indicator
     canvas.drawRect(MENU_ZONE.x, MENU_ZONE.y, MENU_ZONE.width, MENU_ZONE.height, TFT_CYAN);

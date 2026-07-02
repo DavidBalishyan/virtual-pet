@@ -11,6 +11,7 @@
 #include "../lib/Navigation/navigation_manager.h"
 #include "../lib/Timer/time_manager.h"
 #include "../lib/Imu/imu_manager.h"
+#include "../lib/Clock/clock_manager.h"
 #ifdef ENABLE_SOUND
 #include "../lib/Speaker/speaker_manager.h"
 #endif
@@ -65,6 +66,7 @@ StorageManager  storage;  // Saves and loads pet stats to NVS flash storage.
 #ifdef ENABLE_WIRELESS
 WirelessManager wireless; // Broadcasts a WiFi AP and serves the web dashboard.
 #endif
+ClockManager  petClock;    // Reads the BM8563 RTC for the on-screen clock.
 
 // handleDeathScreen() — the only interaction once the pet has died: pressing
 // Button A starts a new game by resetting the pet's stats.
@@ -194,6 +196,13 @@ void renderCurrentScreen() {
     }
     #endif
 
+    // Read the current time from the RTC clock. Hours and minutes are pulled
+    // here and passed as plain ints so DisplayManager never needs to know what
+    // a ClockManager is.
+    int clockHours   = 12;
+    int clockMinutes = 0;
+    petClock.getCurrentTime(clockHours, clockMinutes);
+
     display.renderDisplay(
         myPet.getHappy(), myPet.getFullness(), myPet.getEnergised(),
         myPet.getCleanliness(), myPet.getSick(), myPet.getHydration(),
@@ -202,7 +211,8 @@ void renderCurrentScreen() {
         selectedActionStat,
         myPet.isInDeadState(), myPet.getPetName(),
         navManager.getCurrentScreen(),
-        spriteOffsetX, spriteOffsetY
+        spriteOffsetX, spriteOffsetY,
+        clockHours, clockMinutes
     );
 }
 
@@ -222,6 +232,8 @@ void setup() {
 
     M5.begin();
     Serial.println("[setup] M5.begin done");
+
+    petClock.begin();
 
     #ifdef SPRITE_TEST
     // Clear the screen to black so transparent pixels show the background colour.

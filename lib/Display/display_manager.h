@@ -34,6 +34,7 @@ private:
     // -----------------------------------------------------------------------
     static constexpr ScreenZone TITLE_ZONE    = {  0,   5, 135, 19 };
     static constexpr ScreenZone STATS_ZONE    = {  5,  26, 125, 130 };
+    static constexpr int         CLOCK_Y       = 162;
     static constexpr ScreenZone MOOD_ZONE     = {  0, 180, 135, 18 };
     static constexpr ScreenZone MENU_ZONE     = {  5, 220, 125, 20 };
 
@@ -116,7 +117,7 @@ private:
     // take an offset.
     void renderMainScreen(int fullness, MoodSprite mood, const char* petName, int spriteOffsetX, int spriteOffsetY);
     #ifdef ENABLE_MULTISCREEN
-    void renderStatsScreen(int happiness, int fullness, int energy, int cleanliness, int sick, int hydration, MoodSprite mood, const char* petName);
+    void renderStatsScreen(int happiness, int fullness, int energy, int cleanliness, int sick, int hydration, MoodSprite mood, const char* petName, int clockHours, int clockMinutes);
     #endif
     #ifdef ENABLE_ACTION_MENU
     // The Interact screen needs two pieces of information about the action menu:
@@ -181,7 +182,8 @@ public:
                        MoodSprite mood, const char* selectedActionName,
                        RelevantStat relevantStat,
                        bool petIsDead, const char* petName, ScreenState screenState,
-                       int spriteOffsetX, int spriteOffsetY);
+                       int spriteOffsetX, int spriteOffsetY,
+                       int clockHours, int clockMinutes);
 
     // Pet display helpers — used internally and by the three private render methods
     #ifdef ENABLE_MULTISCREEN
