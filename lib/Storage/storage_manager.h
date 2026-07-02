@@ -29,4 +29,4 @@ public:
     void clear();
 };
 
-#endif
+#endif // STORAGE_MANAGER_H

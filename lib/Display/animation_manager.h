@@ -65,4 +65,4 @@ private:
     unsigned long lastFrameAdvanceTime;
 };
 
-#endif
+#endif // ANIMATION_MANAGER_H

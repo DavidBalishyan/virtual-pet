@@ -59,4 +59,4 @@ public:
     bool isButtonCHeld() const;
 };
 
-#endif
+#endif // BUTTON_HANDLER_H

@@ -1,0 +1,91 @@
+body {
+    background: #1a1a2e;
+    color: #eee;
+    font-family: sans-serif;
+    padding: 16px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: #f1c40f;
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.pet-name {
+    text-align: center;
+    color: #aaa;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.mood {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.mood-badge {
+    display: inline-block;
+    padding: 6px 18px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.stat {
+    margin-bottom: 14px;
+}
+
+.stat-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2px;
+}
+
+.stat-name {
+    font-size: 14px;
+}
+
+.stat-value {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.bar-bg {
+    background: #333;
+    border-radius: 6px;
+    overflow: hidden;
+    height: 16px;
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.3s;
+}
+
+.footer {
+    margin-top: 24px;
+    font-size: 11px;
+    color: #666;
+    text-align: center;
+}
+
+.status-led {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+    background: #e74c3c;
+}
+
+.death-notice {
+    display: none;
+    color: #e74c3c;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 16px;
+}

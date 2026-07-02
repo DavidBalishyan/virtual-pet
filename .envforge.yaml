@@ -1,0 +1,21 @@
+name: virtual-pet-dev
+
+packages:
+  - python3-pip
+  - python3-venv
+  - clang-format-19
+  - clang-tidy-19
+  - cppcheck
+  - valgrind
+  - doxygen
+  - perl
+  - git
+
+env:
+  PLATFORMIO_CORE_DIR: "${HOME}/.platformio"
+
+setup:
+  - pipx install platformio 2>/dev/null || true
+  - pio platform install espressif32 2>/dev/null || true
+  - pio lib install 2>/dev/null || true
+  - echo "virtual-pet development environment ready"

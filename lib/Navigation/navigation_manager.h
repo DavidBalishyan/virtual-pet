@@ -49,4 +49,4 @@ public:
     bool shouldConfirmAction() const;
 };
 
-#endif
+#endif // NAVIGATION_MANAGER_H

@@ -2,6 +2,7 @@
 #define WIRELESS_MANAGER_H
 
 #include <WebServer.h>
+#include <WebSocketsServer.h>
 #include "../Config/scaffold_config.h"
 #include "../Pet/pet.h"
 
@@ -10,17 +11,23 @@ public:
     WirelessManager();
     void begin(Pet& pet);
     void handleClient();
+    void broadcastStats();
 
 private:
-    Pet*       petPtr;   // Points to the pet whose stats we serve
-    WebServer  server;   // HTTP server on port 80
+    Pet*                petPtr;
+    WebServer           server;
+    WebSocketsServer    webSocket;
+    unsigned long       lastBroadcastMs;
 
-    // Handles GET / - builds and returns the stats dashboard page.
-    // Registered with std::bind in begin() so it stays a named member function.
+    static const unsigned long BROADCAST_INTERVAL = 500;
+
     void handleRoot();
-
-    // Builds the full HTML page string from the pet's current stats.
+    void handleCSS();
+    void handleJS();
+    void onWebSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length);
     String buildStatsPage();
+    String buildStatsJson();
+    String moodToJson(MoodSprite mood);
 };
 
-#endif
+#endif // WIRELESS_MANAGER_H

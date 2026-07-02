@@ -115,4 +115,4 @@ public:
         );
 };
 
-#endif
+#endif // ACTION_MENU_H

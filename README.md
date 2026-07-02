@@ -29,18 +29,21 @@ The sprite changes with the pet's mood - neutral, happy, hungry, unwell, thirsty
 
 ## Building and running
 
-This is a [PlatformIO](https://platformio.org/) project.
+This is a [PlatformIO](https://platformio.org/) project. A [`Makefile`](Makefile) wraps the common commands:
 
 ```bash
-# Build and upload to the device
-pio run -e m5stick-c -t upload
-
-# Open the serial monitor
-pio device monitor
-
-# Run unit tests on your PC
-pio test -e native
+make build       # Compile firmware
+make upload      # Build & upload to device
+make run         # upload + serial monitor
+make monitor     # Open serial monitor
+make test        # Run unit tests on your PC
+make clean       # Remove build artifacts
+make lint        # Static analysis (cppcheck)
+make format      # Format all source files
+make info        # Show project info
 ```
+
+An [`.envforge.yaml`](.envforge.yaml) is included for [envforge](https://github.com/DavidBalishyan/envforge) - run `envforge enter .envforge.yaml` to install toolchain dependencies and enter a reproducible dev environment.
 
 ---
 
@@ -71,13 +74,15 @@ The project is a cumulative curriculum. Every major feature is wrapped in an `#i
 | `ENABLE_MOOD_SPRITES` | Four mood faces instead of one | 6 |
 | `ENABLE_WIRELESS` | WiFi AP and web dashboard | 7 |
 
+...
+
 Flip them on and off in `lib/Config/scaffold_config.h` to see the project at each stage.
 
 ---
 
 ## Web dashboard
 
-With `ENABLE_WIRELESS` on, the pet starts a WiFi access point called `VirtualPet` and serves a live stats dashboard at `http://192.168.4.1/`.
+With `ENABLE_WIRELESS` on, the pet starts a WiFi access point called `VirtualPet` and serves a live stats dashboard at <http://192.168.4.1>.
 
 Connect your phone to the `VirtualPet` network (no password), open that address, and you'll see all eight stats as coloured bars, the pet's mood, and its name. The page refreshes every three seconds. If the pet dies, a red notice shows up at the bottom.
 
@@ -99,7 +104,17 @@ Three suites cover the hardware-independent bits:
 The tests compile the real source files against a stub `Arduino.h` so they run on a PC.
 
 ---
+## Referances
 
+- <https://platformio.org>
+- <https://editorconfig.org>
+- <https://www.gnu.org/software/make>
+- <https://gcc.gnu.org>
+- <https://www.perl.org>
+- <https://pipx.pypa.io/stable/how-to/install-pipx>
+- <https://www.doxygen.nl>
+
+---
 ## License
 
 GNU General Public License v3.0. See [LICENSE](LICENSE).

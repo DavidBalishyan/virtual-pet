@@ -95,4 +95,4 @@ enum MoodSprite {
     MOOD_THIRSTY
 };
 
-#endif
+#endif // SCREEN_LAYOUT_H

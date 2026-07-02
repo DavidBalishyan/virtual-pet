@@ -88,4 +88,4 @@ private:
     float smoothedY;
 };
 
-#endif
+#endif // TILT_MOTION_H

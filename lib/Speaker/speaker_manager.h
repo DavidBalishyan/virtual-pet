@@ -47,4 +47,4 @@ public:
     void playDrinkSound();
 };
 
-#endif
+#endif // SPEAKER_MANAGER_H

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TIME_MANAGER_H
+#define TIME_MANAGER_H
 
 #include "../Pet/pet.h"
 
@@ -79,3 +80,5 @@ private:
     // The pet gets thirstier whether you interact with it or not.
     void applyHydrationDecay(Pet& pet);
 };
+
+#endif // TIME_MANAGER_H

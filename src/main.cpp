@@ -217,7 +217,11 @@ void renderCurrentScreen() {
 // then an endless cycle of "read inputs, update the pet, draw the screen".
 // -------------------------------------------------------------------------
 void setup() {
+    Serial.begin(115200);
+    Serial.println("[setup] start");
+
     M5.begin();
+    Serial.println("[setup] M5.begin done");
 
     #ifdef SPRITE_TEST
     // Clear the screen to black so transparent pixels show the background colour.
@@ -234,16 +238,15 @@ void setup() {
                      SPRITE_80X80_TEST_HEIGHT,
                      sprite_80x80_test[0],
                      SPRITE_TRANSPARENT_COLOR);
+    Serial.println("[setup] sprite test done, stopping");
     return; // Skip all normal initialisation.
     #endif
 
-    #ifdef DEBUG
-    Serial.begin(115200);
-    #endif
-
     display.init();
+    Serial.println("[setup] display.init done");
     #ifdef ENABLE_SOUND
     speaker.init();
+    Serial.println("[setup] speaker.init done");
     #endif
 
     #ifdef ENABLE_PERSISTENCE
@@ -251,6 +254,7 @@ void setup() {
     // If no save data exists yet (first boot), load() falls back to healthy defaults.
     // With persistence off, the pet just starts from its constructor defaults.
     storage.load(myPet);
+    Serial.println("[setup] storage.load done");
     #endif
 
     #ifdef ENABLE_WIRELESS
@@ -258,6 +262,7 @@ void setup() {
     // view the pet's live stats by connecting to the AP and opening a browser.
     // Must come after storage.load() so the page shows the real saved stats.
     wireless.begin(myPet);
+    Serial.println("[setup] wireless.begin done");
     #endif
 
     display.showMessage("Virtual Pet initialized!");
@@ -273,6 +278,7 @@ void loop() {
     buttons.update(); // Detect which buttons were pressed this frame
     #ifdef ENABLE_WIRELESS
     wireless.handleClient();  // Process any incoming web request
+    wireless.broadcastStats();  // Push stats to WebSocket clients
     #endif
     #ifdef ENABLE_IMU_PLAY
     imu.update();     // Read fresh accelerometer data and update shake detection

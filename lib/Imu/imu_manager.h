@@ -71,4 +71,4 @@ public:
     float getAccelZ() const;
 };
 
-#endif
+#endif // IMU_MANAGER_H

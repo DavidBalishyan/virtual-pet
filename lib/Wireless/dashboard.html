@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Virtual Pet Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/script.js" defer></script>
+</head>
+<body>
+  <h1>{{PET_NAME}}</h1>
+  <p class="pet-name" id="petName">{{PET_NAME}}</p>
+  <div class="mood">
+    <span class="mood-badge" id="moodBadge">Loading...</span>
+  </div>
+  <div id="stats"></div>
+  <p id="deathNotice" class="death-notice">Your pet has died!</p>
+  <div class="footer">
+    Connected to <strong>VirtualPet</strong> -
+    <span class="status-led" id="statusLed"></span>
+    <span id="wsStatus">connecting...</span>
+  </div>
+</body>
+</html>

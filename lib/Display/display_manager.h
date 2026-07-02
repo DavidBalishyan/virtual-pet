@@ -214,4 +214,4 @@ public:
                        int spriteOffsetX, int spriteOffsetY);
 };
 
-#endif
+#endif // DISPLAY_MANAGER_H
