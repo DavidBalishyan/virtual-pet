@@ -18,13 +18,22 @@ Pet::Pet()
       energised(DEFAULT_ENERGISED), hydration(DEFAULT_HYDRATION),
       currentState(STATE_IDLE),
       lastFullnessAlertTime(0), lastSicknessAlertTime(0), lastThirstAlertTime(0) {
-    petName = "DT";
+    strncpy(petName, "Pixel", MAX_NAME_LENGTH - 1);
+    petName[MAX_NAME_LENGTH - 1] = '\0';
 }
 
 // getPetName()
 // Returns the pet's display name so the title zone can show it on screen.
 const char* Pet::getPetName() const {
     return petName;
+}
+
+// setPetName()
+// Sets the pet's display name from a string sent by the web dashboard.
+// Truncated to MAX_NAME_LENGTH-1 characters to fit the fixed buffer.
+void Pet::setPetName(const char* name) {
+    strncpy(petName, name, MAX_NAME_LENGTH - 1);
+    petName[MAX_NAME_LENGTH - 1] = '\0';
 }
 
 // Getters
@@ -272,6 +281,9 @@ void Pet::reset(
     energised   = DEFAULT_ENERGISED;
     hydration   = DEFAULT_HYDRATION;
     currentState = STATE_IDLE;  // Clear death state so the next updateState() starts fresh
+
+    strncpy(petName, "Pixel", MAX_NAME_LENGTH - 1);
+    petName[MAX_NAME_LENGTH - 1] = '\0';
 
     // Clear the alert timers so no leftover rate-limit state carries into the new life.
     lastFullnessAlertTime  = 0;

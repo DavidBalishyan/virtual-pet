@@ -41,7 +41,8 @@ private:
 
     PetState currentState;  // Which behaviour the pet is currently in
 
-    const char* petName;  // Display name shown in the title zone; default is "Pixel"
+    static const int MAX_NAME_LENGTH = 16;
+    char petName[MAX_NAME_LENGTH];  // Display name shown in the title zone; default is "Pixel"
 
     // Timestamps used to rate-limit the alerts — same millis() pattern as TimerManager.
     // The pet plays each alert at most once per interval (see updateState()).
@@ -116,6 +117,9 @@ public:
 
     // Returns the pet's display name for use in the title zone
     const char* getPetName() const;
+
+    // Sets the pet's display name (truncated to MAX_NAME_LENGTH-1 chars)
+    void setPetName(const char* name);
 
     // Returns the current behavioural state of the pet
     PetState getState() const;

@@ -262,6 +262,9 @@ void setup() {
     // view the pet's live stats by connecting to the AP and opening a browser.
     // Must come after storage.load() so the page shows the real saved stats.
     wireless.begin(myPet);
+    #ifdef ENABLE_PERSISTENCE
+    wireless.setStorage(storage);
+    #endif
     Serial.println("[setup] wireless.begin done");
     #endif
 
@@ -279,6 +282,19 @@ void loop() {
     #ifdef ENABLE_WIRELESS
     wireless.handleClient();  // Process any incoming web request
     wireless.broadcastStats();  // Push stats to WebSocket clients
+
+    // Handle a dashboard-initiated reset (works from any screen, alive or dead).
+    if (wireless.isResetRequested()) {
+        myPet.reset(
+            #ifdef ENABLE_SOUND
+            speaker
+            #endif
+        );
+        #ifdef ENABLE_PERSISTENCE
+        storage.clear();
+        #endif
+        wireless.clearResetRequest();
+    }
     #endif
     #ifdef ENABLE_IMU_PLAY
     imu.update();     // Read fresh accelerometer data and update shake detection

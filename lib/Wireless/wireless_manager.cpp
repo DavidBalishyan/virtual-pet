@@ -4,13 +4,18 @@
 
 #include "dashboard_assets.h"
 
-static const char* AP_SSID = "VirtualPet";
+static const char* AP_SSID = "DeadlyPet";
 
 static const int HTTP_PORT = 80;
 static const int WS_PORT = 81;
 
 WirelessManager::WirelessManager()
-    : petPtr(nullptr), server(HTTP_PORT), webSocket(WS_PORT), lastBroadcastMs(0) {
+    : petPtr(nullptr), server(HTTP_PORT), webSocket(WS_PORT), lastBroadcastMs(0),
+      resetRequested(false)
+    #ifdef ENABLE_PERSISTENCE
+      , storagePtr(nullptr)
+    #endif
+{
 }
 
 void WirelessManager::begin(Pet& pet) {
@@ -59,6 +64,20 @@ void WirelessManager::handleRoot() {
     server.send(200, "text/html", html);
 }
 
+#ifdef ENABLE_PERSISTENCE
+void WirelessManager::setStorage(StorageManager& storage) {
+    storagePtr = &storage;
+}
+#endif
+
+bool WirelessManager::isResetRequested() const {
+    return resetRequested;
+}
+
+void WirelessManager::clearResetRequest() {
+    resetRequested = false;
+}
+
 void WirelessManager::onWebSocketEvent(uint8_t num, WStype_t type,
                                         uint8_t* payload, size_t length) {
     switch (type) {
@@ -69,10 +88,57 @@ void WirelessManager::onWebSocketEvent(uint8_t num, WStype_t type,
             webSocket.sendTXT(num, json);
             break;
         }
-        case WStype_TEXT:
+        case WStype_TEXT: {
+            String cmd = String((char*)payload).substring(0, length);
+            processCommand(cmd);
             break;
+        }
         default:
             break;
+    }
+}
+
+void WirelessManager::processCommand(const String& json) {
+    // Simple string-based JSON parsing — no external dependency needed.
+    // Expected formats:
+    //   {"action":"feed"}   {"action":"play"}   etc.
+    //   {"action":"setName","name":"Fluffy"}
+    //   {"action":"save"}
+    //   {"action":"reset"}
+
+    // Find the action value between "action":" and the next "
+    int actionStart = json.indexOf("\"action\":\"");
+    if (actionStart < 0) return;
+    actionStart += 10; // skip past "action":"
+    int actionEnd = json.indexOf("\"", actionStart);
+    if (actionEnd < 0) return;
+    String action = json.substring(actionStart, actionEnd);
+
+    if (action == "feed")          { petPtr->feed(); }
+    else if (action == "play")     { petPtr->play(); }
+    else if (action == "sleep")    { petPtr->sleep(); }
+    else if (action == "bathe")    { petPtr->bathe(); }
+    else if (action == "heal")     { petPtr->heal(); }
+    else if (action == "drink")    { petPtr->drink(); }
+    else if (action == "save") {
+        #ifdef ENABLE_PERSISTENCE
+        if (storagePtr) storagePtr->save(*petPtr);
+        #endif
+    }
+    else if (action == "reset")    { resetRequested = true; }
+    else if (action == "setName") {
+        int nameStart = json.indexOf("\"name\":\"");
+        if (nameStart >= 0) {
+            nameStart += 8; // skip past "name":"
+            int nameEnd = json.indexOf("\"", nameStart);
+            if (nameEnd > nameStart) {
+                String name = json.substring(nameStart, nameEnd);
+                petPtr->setPetName(name.c_str());
+                #ifdef ENABLE_PERSISTENCE
+                if (storagePtr) storagePtr->save(*petPtr);
+                #endif
+            }
+        }
     }
 }
 

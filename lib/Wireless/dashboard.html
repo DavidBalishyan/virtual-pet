@@ -2,18 +2,46 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Virtual Pet Dashboard</title>
   <link rel="stylesheet" href="/style.css">
   <script src="/script.js" defer></script>
 </head>
 <body>
-  <h1>{{PET_NAME}}</h1>
-  <p class="pet-name" id="petName">{{PET_NAME}}</p>
+  <h1 id="petName">{{PET_NAME}}</h1>
+
   <div class="mood">
     <span class="mood-badge" id="moodBadge">Loading...</span>
   </div>
+
   <div id="stats"></div>
+
   <p id="deathNotice" class="death-notice">Your pet has died!</p>
+
+  <div class="section" id="actionsSection">
+    <h2>Actions</h2>
+    <div class="action-grid">
+      <button class="action-btn feed"    data-action="feed">Feed</button>
+      <button class="action-btn play"    data-action="play">Play</button>
+      <button class="action-btn sleep"   data-action="sleep">Sleep</button>
+      <button class="action-btn bathe"   data-action="bathe">Bathe</button>
+      <button class="action-btn heal"    data-action="heal">Heal</button>
+      <button class="action-btn drink"   data-action="drink">Drink</button>
+    </div>
+    <div class="action-row">
+      <button class="action-btn save"    data-action="save">Save</button>
+      <button class="action-btn reset danger" data-action="reset">Reset</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Pet Name</h2>
+    <div class="name-row">
+      <input type="text" id="nameInput" maxlength="15" placeholder="Enter name">
+      <button id="renameBtn">Rename</button>
+    </div>
+  </div>
+
   <div class="footer">
     Connected to <strong>VirtualPet</strong> -
     <span class="status-led" id="statusLed"></span>

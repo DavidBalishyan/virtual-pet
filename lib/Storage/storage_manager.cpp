@@ -26,6 +26,7 @@ void StorageManager::save(const Pet& pet) {
     prefs.putInt("cleanliness", pet.getCleanliness());
     prefs.putInt("energised",   pet.getEnergised());
     prefs.putInt("hydration",   pet.getHydration());
+    prefs.putString("petName",  pet.getPetName());
 
     prefs.end();
 
@@ -55,6 +56,10 @@ void StorageManager::load(Pet& pet) {
     pet.setCleanliness(prefs.getInt("cleanliness", Pet::DEFAULT_CLEANLINESS));
     pet.setEnergised(  prefs.getInt("energised",   Pet::DEFAULT_ENERGISED));
     pet.setHydration(  prefs.getInt("hydration",   Pet::DEFAULT_HYDRATION));
+
+    // Read the pet name; if no key exists yet, fall back to the default.
+    String savedName = prefs.getString("petName", "Pixel");
+    pet.setPetName(savedName.c_str());
 
     prefs.end();
 

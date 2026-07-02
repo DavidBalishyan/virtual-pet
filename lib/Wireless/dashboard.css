@@ -13,13 +13,6 @@ h1 {
     margin-bottom: 4px;
 }
 
-.pet-name {
-    text-align: center;
-    color: #aaa;
-    margin-top: 0;
-    margin-bottom: 20px;
-}
-
 .mood {
     text-align: center;
     margin-bottom: 20px;
@@ -65,6 +58,100 @@ h1 {
     transition: width 0.3s;
 }
 
+/* Action buttons */
+.section {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #333;
+}
+
+.section h2 {
+    font-size: 14px;
+    color: #888;
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.action-row {
+    display: flex;
+    gap: 8px;
+}
+
+.action-row .action-btn {
+    flex: 1;
+}
+
+.action-btn {
+    padding: 10px 6px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #fff;
+    transition: opacity 0.15s;
+}
+
+.action-btn:active {
+    opacity: 0.6;
+}
+
+.action-btn.feed    { background: #e74c3c; }
+.action-btn.play    { background: #2ecc71; }
+.action-btn.sleep   { background: #3498db; }
+.action-btn.bathe   { background: #1abc9c; }
+.action-btn.heal    { background: #9b59b6; }
+.action-btn.drink   { background: #e67e22; }
+.action-btn.save    { background: #f39c12; }
+.action-btn.reset   { background: #555; }
+.action-btn.danger  { background: #c0392b; }
+
+/* Name editor */
+.name-row {
+    display: flex;
+    gap: 8px;
+}
+
+.name-row input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background: #222;
+    color: #eee;
+    font-size: 14px;
+    outline: none;
+}
+
+.name-row input:focus {
+    border-color: #f1c40f;
+}
+
+.name-row button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background: #f1c40f;
+    color: #1a1a2e;
+    font-weight: bold;
+    font-size: 13px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+.name-row button:active {
+    opacity: 0.6;
+}
+
+/* Footer */
 .footer {
     margin-top: 24px;
     font-size: 11px;
