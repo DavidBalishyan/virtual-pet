@@ -4,7 +4,7 @@
 
 #include "dashboard_assets.h"
 
-static const char* AP_SSID = "DeadlyPet";
+static const char* AP_SSID = "VirtualPet";
 
 static const int HTTP_PORT = 80;
 static const int WS_PORT = 81;
