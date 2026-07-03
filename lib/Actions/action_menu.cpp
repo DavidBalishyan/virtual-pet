@@ -65,6 +65,7 @@ void ActionMenu::confirmAction(Pet& pet, DisplayManager& display
     #endif
     #ifdef ENABLE_PERSISTENCE
     , StorageManager& storage
+    , TimerManager& timers
     #endif
     ) {
     Action selectedAction = getSelectedAction();
@@ -112,7 +113,7 @@ void ActionMenu::confirmAction(Pet& pet, DisplayManager& display
             break;
         #ifdef ENABLE_PERSISTENCE
         case ACTION_SAVE:
-            storage.save(pet);
+            storage.save(pet, timers);
             #ifdef ENABLE_SOUND
             speaker.playSaveSound();
             #endif

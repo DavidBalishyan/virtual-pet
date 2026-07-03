@@ -10,8 +10,8 @@ static const int HTTP_PORT = 80;
 static const int WS_PORT = 81;
 
 WirelessManager::WirelessManager()
-    : petPtr(nullptr), server(HTTP_PORT), webSocket(WS_PORT), lastBroadcastMs(0),
-      resetRequested(false)
+    : petPtr(nullptr), timersPtr(nullptr), server(HTTP_PORT), webSocket(WS_PORT),
+      lastBroadcastMs(0), resetRequested(false)
     #ifdef ENABLE_PERSISTENCE
       , storagePtr(nullptr)
     #endif
@@ -70,6 +70,10 @@ void WirelessManager::setStorage(StorageManager& storage) {
 }
 #endif
 
+void WirelessManager::setTimers(TimerManager& timers) {
+    timersPtr = &timers;
+}
+
 bool WirelessManager::isResetRequested() const {
     return resetRequested;
 }
@@ -122,7 +126,7 @@ void WirelessManager::processCommand(const String& json) {
     else if (action == "drink")    { petPtr->drink(); }
     else if (action == "save") {
         #ifdef ENABLE_PERSISTENCE
-        if (storagePtr) storagePtr->save(*petPtr);
+        if (storagePtr && timersPtr) storagePtr->save(*petPtr, *timersPtr);
         #endif
     }
     else if (action == "reset")    { resetRequested = true; }
@@ -135,7 +139,7 @@ void WirelessManager::processCommand(const String& json) {
                 String name = json.substring(nameStart, nameEnd);
                 petPtr->setPetName(name.c_str());
                 #ifdef ENABLE_PERSISTENCE
-                if (storagePtr) storagePtr->save(*petPtr);
+                if (storagePtr && timersPtr) storagePtr->save(*petPtr, *timersPtr);
                 #endif
             }
         }

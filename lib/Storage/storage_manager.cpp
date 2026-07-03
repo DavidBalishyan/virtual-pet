@@ -9,8 +9,9 @@ const char* StorageManager::NAMESPACE = "virtual-pet";
 
 // save()
 // Opens the NVS namespace in read/write mode, writes all eight stat values
-// as integers, then closes the handle. Calling end() commits the data to flash.
-void StorageManager::save(const Pet& pet) {
+// plus the six timer timestamps as integers, then closes the handle.
+// Calling end() commits the data to flash.
+void StorageManager::save(const Pet& pet, const TimerManager& timers) {
 #ifdef DEBUG
     Serial.println("StorageManager: saving pet stats to NVS...");
 #endif
@@ -28,6 +29,14 @@ void StorageManager::save(const Pet& pet) {
     prefs.putInt("hydration",   pet.getHydration());
     prefs.putString("petName",  pet.getPetName());
 
+    // Save timer timestamps so real-time decay can catch up after power-off.
+    prefs.putInt("t_fullness",     timers.getLastFullnessDecayTime());
+    prefs.putInt("t_happiness",    timers.getLastHappinessDecayTime());
+    prefs.putInt("t_energy",       timers.getLastEnergyDrainTime());
+    prefs.putInt("t_cleanliness",  timers.getLastCleanlinessDecayTime());
+    prefs.putInt("t_sickness",     timers.getLastSicknessAccumulationTime());
+    prefs.putInt("t_hydration",    timers.getLastHydrationDecayTime());
+
     prefs.end();
 
 #ifdef DEBUG
@@ -40,7 +49,7 @@ void StorageManager::save(const Pet& pet) {
 // pet via its setter. The second argument to getInt() is the default value used
 // when no save data exists yet — these match the Pet constructor's starting values
 // so a fresh device behaves identically to a newly constructed Pet object.
-void StorageManager::load(Pet& pet) {
+void StorageManager::load(Pet& pet, TimerManager& timers) {
 #ifdef DEBUG
     Serial.println("StorageManager: loading pet stats from NVS...");
 #endif
@@ -60,6 +69,14 @@ void StorageManager::load(Pet& pet) {
     // Read the pet name; if no key exists yet, fall back to the default.
     String savedName = prefs.getString("petName", "Pixel");
     pet.setPetName(savedName.c_str());
+
+    // Load timer timestamps — default 0 means "first boot", handled by TimerManager.
+    timers.setLastFullnessDecayTime(           prefs.getInt("t_fullness",     0));
+    timers.setLastHappinessDecayTime(          prefs.getInt("t_happiness",    0));
+    timers.setLastEnergyDrainTime(             prefs.getInt("t_energy",       0));
+    timers.setLastCleanlinessDecayTime(        prefs.getInt("t_cleanliness",  0));
+    timers.setLastSicknessAccumulationTime(    prefs.getInt("t_sickness",     0));
+    timers.setLastHydrationDecayTime(          prefs.getInt("t_hydration",    0));
 
     prefs.end();
 

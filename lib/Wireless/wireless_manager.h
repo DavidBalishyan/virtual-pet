@@ -5,6 +5,7 @@
 #include <WebSocketsServer.h>
 #include "../Config/scaffold_config.h"
 #include "../Pet/pet.h"
+#include "../Timer/time_manager.h"
 #ifdef ENABLE_PERSISTENCE
 #include "../Storage/storage_manager.h"
 #endif
@@ -20,11 +21,13 @@ public:
     #ifdef ENABLE_PERSISTENCE
     void setStorage(StorageManager& storage);
     #endif
+    void setTimers(TimerManager& timers);
     bool isResetRequested() const;
     void clearResetRequest();
 
 private:
     Pet*                petPtr;
+    TimerManager*       timersPtr;
     WebServer           server;
     WebSocketsServer    webSocket;
     unsigned long       lastBroadcastMs;

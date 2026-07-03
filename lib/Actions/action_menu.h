@@ -12,6 +12,7 @@
 #ifdef ENABLE_PERSISTENCE
 #include "../Storage/storage_manager.h"
 #endif
+#include "../Timer/time_manager.h"
 
 // ActionMenu manages the list of things the user can do with their pet.
 // It tracks which action is highlighted and executes the action when confirmed.
@@ -102,15 +103,16 @@ public:
 
     // confirmAction() — executes the selected action and plays the matching sound.
     // Only call this when isBackSelected() is false — Back is handled separately.
-    // The two trailing parameters only exist when their feature is switched on:
-    // the speaker when sound is on, and the storage when persistence is on (the
-    // Save action writes the pet directly to NVS).
+    // The parameters only exist when their feature is switched on:
+    // the speaker when sound is on, and the storage + timers when persistence
+    // is on (the Save action writes pet stats and timer timestamps to NVS).
     void confirmAction(Pet& pet, DisplayManager& display
         #ifdef ENABLE_SOUND
         , SpeakerManager& speaker
         #endif
         #ifdef ENABLE_PERSISTENCE
         , StorageManager& storage
+        , TimerManager& timers
         #endif
         );
 };

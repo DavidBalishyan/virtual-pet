@@ -111,7 +111,7 @@ void printPetStateToSerial() {
 void updateLivePet() {
     // Run all automatic stat changes (fullness decay, happiness decay, energy drain).
     // The rules for what changes and how fast live in TimerManager, not here.
-    timers.update(myPet);
+    timers.update(myPet, petClock.getEpochSeconds());
 
     #ifdef ENABLE_ACTION_MENU
     // Only cycle through menu actions when the Interact screen is visible.
@@ -146,6 +146,7 @@ void updateLivePet() {
             #endif
             #ifdef ENABLE_PERSISTENCE
             , storage
+            , timers
             #endif
             );
     }
@@ -265,7 +266,7 @@ void setup() {
     // Restore the pet's stats from NVS flash storage.
     // If no save data exists yet (first boot), load() falls back to healthy defaults.
     // With persistence off, the pet just starts from its constructor defaults.
-    storage.load(myPet);
+    storage.load(myPet, timers);
     Serial.println("[setup] storage.load done");
     #endif
 
@@ -274,6 +275,7 @@ void setup() {
     // view the pet's live stats by connecting to the AP and opening a browser.
     // Must come after storage.load() so the page shows the real saved stats.
     wireless.begin(myPet);
+    wireless.setTimers(timers);
     #ifdef ENABLE_PERSISTENCE
     wireless.setStorage(storage);
     #endif
