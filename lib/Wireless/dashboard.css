@@ -151,6 +151,26 @@ h1 {
     opacity: 0.6;
 }
 
+/* Brightness slider */
+.brightness-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brightness-row input[type="range"] {
+    flex: 1;
+    accent-color: #f1c40f;
+    cursor: pointer;
+}
+
+.brightness-value {
+    font-size: 14px;
+    font-weight: bold;
+    min-width: 44px;
+    text-align: right;
+}
+
 /* Footer */
 .footer {
     margin-top: 24px;

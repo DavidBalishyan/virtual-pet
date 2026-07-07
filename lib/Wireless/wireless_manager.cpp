@@ -10,7 +10,8 @@ static const int HTTP_PORT = 80;
 static const int WS_PORT = 81;
 
 WirelessManager::WirelessManager()
-    : petPtr(nullptr), timersPtr(nullptr), server(HTTP_PORT), webSocket(WS_PORT),
+    : petPtr(nullptr), timersPtr(nullptr), displayPtr(nullptr),
+      server(HTTP_PORT), webSocket(WS_PORT),
       lastBroadcastMs(0), resetRequested(false)
     #ifdef ENABLE_PERSISTENCE
       , storagePtr(nullptr)
@@ -74,6 +75,10 @@ void WirelessManager::setTimers(TimerManager& timers) {
     timersPtr = &timers;
 }
 
+void WirelessManager::setDisplay(DisplayManager& display) {
+    displayPtr = &display;
+}
+
 bool WirelessManager::isResetRequested() const {
     return resetRequested;
 }
@@ -107,6 +112,7 @@ void WirelessManager::processCommand(const String& json) {
     // Expected formats:
     //   {"action":"feed"}   {"action":"play"}   etc.
     //   {"action":"setName","name":"Fluffy"}
+    //   {"action":"setBrightness","value":75}
     //   {"action":"save"}
     //   {"action":"reset"}
 
@@ -130,6 +136,16 @@ void WirelessManager::processCommand(const String& json) {
         #endif
     }
     else if (action == "reset")    { resetRequested = true; }
+    else if (action == "setBrightness") {
+        // Pull the integer after "value": — String::toInt() stops at the first
+        // non-digit, so it copes with the trailing } and any whitespace.
+        int valueStart = json.indexOf("\"value\":");
+        if (valueStart >= 0 && displayPtr) {
+            valueStart += 8; // skip past "value":
+            int percent = json.substring(valueStart).toInt();
+            displayPtr->setBrightness(percent);
+        }
+    }
     else if (action == "setName") {
         int nameStart = json.indexOf("\"name\":\"");
         if (nameStart >= 0) {
@@ -162,7 +178,10 @@ String WirelessManager::buildStatsJson() {
     json += "\"hydration\":"    + String(petPtr->getHydration()) + ",";
     json += "\"tired\":"        + String(petPtr->getTired()) + ",";
     json += "\"sad\":"          + String(petPtr->getSad());
-    json += "}";
+    json += "},";
+    // Current backlight level (0-100), so the dashboard slider can show the
+    // device's real brightness on connect and after any change.
+    json += "\"brightness\":" + String(displayPtr ? displayPtr->getBrightness() : 100);
     json += "}";
     return json;
 }

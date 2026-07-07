@@ -79,6 +79,14 @@ private:
     // Geometry constants shared across all screens
     static const int STAT_BAR_HEIGHT = 10;
 
+    // Backlight brightness the screen starts at, as a 0-100 percentage.
+    // Applied once in init(); the dashboard can change it live afterwards.
+    static const uint8_t DEFAULT_BRIGHTNESS_PERCENT = 100;
+
+    // The current backlight level as a 0-100 percentage. Kept here so the
+    // dashboard can read back the value it just set (see getBrightness).
+    uint8_t brightnessPercent;
+
     // State tracked between frames.
     // We now redraw the whole screen to the off-screen canvas every loop and
     // push it in one shot, so there is no longer any redraw throttle to manage.
@@ -165,6 +173,14 @@ public:
     // working without needing two separate methods.
     void clearScreen(uint32_t color = TFT_BLACK);
     void fillRect(int x, int y, int width, int height, uint32_t color);
+
+    // Backlight brightness control. percent is clamped to 0-100 and mapped to
+    // the LCD's native 0-255 range. The dashboard drives these; nothing else in
+    // the firmware changes brightness, so this is the one place that talks to
+    // the backlight. getBrightness() returns the last value set (as a percent)
+    // so the dashboard slider can show the device's real level.
+    void setBrightness(int percent);
+    int  getBrightness() const;
 
     // Text display
     void printText(const char* text, int x, int y, uint32_t color = TFT_WHITE, uint8_t size = 2);

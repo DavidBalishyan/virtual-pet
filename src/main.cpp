@@ -276,6 +276,8 @@ void setup() {
     // Must come after storage.load() so the page shows the real saved stats.
     wireless.begin(myPet);
     wireless.setTimers(timers);
+    // Let the dashboard drive the screen backlight and read its current level.
+    wireless.setDisplay(display);
     #ifdef ENABLE_PERSISTENCE
     wireless.setStorage(storage);
     #endif

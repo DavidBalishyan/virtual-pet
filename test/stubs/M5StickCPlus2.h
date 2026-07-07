@@ -37,6 +37,7 @@ public:
         int16_t width() { return 135; }
         int16_t height() { return 240; }
         void setRotation(int) {}
+        void setBrightness(uint8_t) {}
         uint16_t color565(uint8_t, uint8_t, uint8_t) { return 0; }
     } Lcd;
 

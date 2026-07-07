@@ -2,7 +2,8 @@
 
 DisplayManager::DisplayManager()
     : lastRenderedScreen(SCREEN_MAIN),
-      petWasDeadLastFrame(false) {
+      petWasDeadLastFrame(false),
+      brightnessPercent(DEFAULT_BRIGHTNESS_PERCENT) {
 }
 
 void DisplayManager::init() {
@@ -29,8 +30,31 @@ void DisplayManager::init() {
     // sprite bytes back as they are drawn in:
     //     canvas.setSwapBytes(true);
 
+    // Set the backlight to a known level so getBrightness() reports the true
+    // value from the first frame, rather than whatever M5.begin() left it at.
+    setBrightness(brightnessPercent);
+
     clearScreen(TFT_BLACK);
     pushCanvas();
+}
+
+// setBrightness() — the one place that drives the LCD backlight.
+// percent is clamped to 0-100 and scaled to the panel's native 0-255 range.
+// The dashboard calls this over WebSocket; nothing else touches brightness.
+void DisplayManager::setBrightness(int percent) {
+    if (percent < 0)   { percent = 0; }
+    if (percent > 100) { percent = 100; }
+    brightnessPercent = (uint8_t)percent;
+
+    // Map 0-100% onto the 0-255 range the LCD driver expects.
+    uint8_t level = (uint8_t)((percent * 255) / 100);
+    M5.Lcd.setBrightness(level);
+}
+
+// getBrightness() — the last brightness set, as a 0-100 percentage.
+// Lets the dashboard slider reflect the device's actual level.
+int DisplayManager::getBrightness() const {
+    return brightnessPercent;
 }
 
 // pushCanvas() — copies the finished off-screen frame to the LCD in one shot.
