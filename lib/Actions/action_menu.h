@@ -106,13 +106,13 @@ public:
     // The parameters only exist when their feature is switched on:
     // the speaker when sound is on, and the storage + timers when persistence
     // is on (the Save action writes pet stats and timer timestamps to NVS).
-    void confirmAction(Pet& pet, DisplayManager& display
+    void confirmAction(Pet& pet, const DisplayManager& display
         #ifdef ENABLE_SOUND
         , SpeakerManager& speaker
         #endif
         #ifdef ENABLE_PERSISTENCE
         , StorageManager& storage
-        , TimerManager& timers
+        , const TimerManager& timers
         #endif
         );
 };

@@ -144,6 +144,9 @@ private:
     // Draws the single fullness bar on the Main screen (label + red progress bar).
     // The Main screen otherwise shows only the pet's face, so this is the one
     // stat the user can watch at a glance from Session 1 onward.
+    // Only called in the no-action-menu build, so cppcheck sees it as unused
+    // whenever ENABLE_ACTION_MENU is defined.
+    // cppcheck-suppress unusedPrivateFunction
     void drawMainFullnessBar(int fullness);
 
     #ifdef ENABLE_ACTION_MENU

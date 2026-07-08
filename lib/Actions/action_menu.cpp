@@ -59,13 +59,13 @@ RelevantStat ActionMenu::getRelevantStat() const {
     return actions[currentActionIndex].relevantStat;
 }
 
-void ActionMenu::confirmAction(Pet& pet, DisplayManager& display
+void ActionMenu::confirmAction(Pet& pet, const DisplayManager& display
     #ifdef ENABLE_SOUND
     , SpeakerManager& speaker
     #endif
     #ifdef ENABLE_PERSISTENCE
     , StorageManager& storage
-    , TimerManager& timers
+    , const TimerManager& timers
     #endif
     ) {
     Action selectedAction = getSelectedAction();

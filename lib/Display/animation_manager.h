@@ -34,7 +34,7 @@ public:
     //   frameCount     : how many frames the sprite has (1 = a still image).
     //   frameDurationMs: how long each frame is shown; defaults to
     //                     FRAME_DURATION_MS (5 fps).
-    AnimationManager(int frameCount, unsigned long frameDurationMs = FRAME_DURATION_MS);
+    explicit AnimationManager(int frameCount, unsigned long frameDurationMs = FRAME_DURATION_MS);
 
     // update(): call once per loop(). Advances to the next frame if
     // frameDurationMs has passed since the last advance. Does nothing for a

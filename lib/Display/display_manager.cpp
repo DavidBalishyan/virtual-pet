@@ -101,9 +101,7 @@ void DisplayManager::renderDisplay(int happiness, int fullness, int energy, int 
     // The pet was dead last frame but is alive now, so it has just been reset.
     // Clear the flag; the screen redraws this frame like any other. There is no
     // throttle to nudge anymore now that every frame redraws.
-    if (petWasDeadLastFrame) {
-        petWasDeadLastFrame = false;
-    }
+    petWasDeadLastFrame = false;
 
     // Restart the sprite animation from frame 0 whenever the screen changes, so
     // the pet does not appear to resume mid-bounce after switching screens.

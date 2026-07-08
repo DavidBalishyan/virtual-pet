@@ -77,8 +77,8 @@ jobs:
       - name: Install cppcheck
         run: sudo apt-get update && sudo apt-get install -y cppcheck
 
-      - name: Generate asset headers
-        run: make generate
-
+      # cppcheck analyses the hand-written sources only. The generated asset
+      # headers are deliberately NOT built here: pulling them in drags Arduino
+      # macros like PROGMEM into scope, where cppcheck reports them as unknown.
       - name: Run cppcheck
         run: make lint

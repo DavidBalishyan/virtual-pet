@@ -98,7 +98,7 @@ void WirelessManager::onWebSocketEvent(uint8_t num, WStype_t type,
             break;
         }
         case WStype_TEXT: {
-            String cmd = String((char*)payload).substring(0, length);
+            String cmd = String(reinterpret_cast<char*>(payload)).substring(0, length);
             processCommand(cmd);
             break;
         }
