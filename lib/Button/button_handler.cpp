@@ -24,8 +24,8 @@ void ButtonHandler::update() {
 }
 
 // wasButtonAPressed()
-// Returns true only on the single frame when the button first goes down —
-// current frame is pressed AND the previous frame was not.
+// Returns true only on the single frame when the button first goes down:
+// the current frame is pressed AND the previous frame was not.
 bool ButtonHandler::wasButtonAPressed() const {
     return currentButtonA && !prevButtonA;
 }

@@ -108,7 +108,7 @@ void WirelessManager::onWebSocketEvent(uint8_t num, WStype_t type,
 }
 
 void WirelessManager::processCommand(const String& json) {
-    // Simple string-based JSON parsing — no external dependency needed.
+    // Simple string-based JSON parsing. No external dependency needed.
     // Expected formats:
     //   {"action":"feed"}   {"action":"play"}   etc.
     //   {"action":"setName","name":"Fluffy"}
@@ -137,7 +137,7 @@ void WirelessManager::processCommand(const String& json) {
     }
     else if (action == "reset")    { resetRequested = true; }
     else if (action == "setBrightness") {
-        // Pull the integer after "value": — String::toInt() stops at the first
+        // Pull the integer after the "value": key. String::toInt() stops at the first
         // non-digit, so it copes with the trailing } and any whitespace.
         int valueStart = json.indexOf("\"value\":");
         if (valueStart >= 0 && displayPtr) {

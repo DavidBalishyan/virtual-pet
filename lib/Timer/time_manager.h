@@ -23,17 +23,17 @@
 // ---------------------------------------------------------------
 class TimerManager {
 public:
-    // Constructor — sets all timer timestamps to zero so they are
+    // Constructor: sets all timer timestamps to zero so they are
     // initialised to the current time on the first update() call.
     TimerManager();
 
-    // update() — call this once every loop().
+    // update(): call this once every loop().
     // currentEpochSecs comes from ClockManager::getEpochSeconds().
     // It checks each timer and applies the matching stat change to the pet
     // if enough time has passed.
     void update(Pet& pet, time_t currentEpochSecs);
 
-    // Getters — used by StorageManager to persist timer positions to NVS.
+    // Getters: used by StorageManager to persist timer positions to NVS.
     time_t getLastFullnessDecayTime() const;
     time_t getLastHappinessDecayTime() const;
     time_t getLastEnergyDrainTime() const;
@@ -41,7 +41,7 @@ public:
     time_t getLastSicknessAccumulationTime() const;
     time_t getLastHydrationDecayTime() const;
 
-    // Setters — used by StorageManager to restore timer positions from NVS.
+    // Setters: used by StorageManager to restore timer positions from NVS.
     void setLastFullnessDecayTime(time_t t);
     void setLastHappinessDecayTime(time_t t);
     void setLastEnergyDrainTime(time_t t);
@@ -74,7 +74,7 @@ private:
     time_t lastHydrationDecayTime;
 
     // -----------------------------------------------------------------
-    // Private helper methods — one per stat that changes automatically.
+    // Private helper methods. One per stat that changes automatically.
     // Keeping each rule in its own function makes them easy to find,
     // read, and modify independently.
     // -----------------------------------------------------------------
@@ -96,7 +96,7 @@ private:
     void applyCleanlinessDecay(Pet& pet, time_t currentTime);
 
     // Increases sickness when cleanliness is dangerously low.
-    // A dirty pet gradually becomes unwell — bathing prevents this.
+    // A dirty pet gradually becomes unwell. Bathing prevents this.
     void applySicknessAccumulation(Pet& pet, time_t currentTime);
 
     // Decreases hydration by a fixed amount every few seconds.

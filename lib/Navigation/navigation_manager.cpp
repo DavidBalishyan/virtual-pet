@@ -11,7 +11,7 @@ void NavigationManager::update(const ButtonHandler& buttons, bool backSelected) 
     // Reset the confirm flag at the start of every frame so that it is only
     // true for the single loop iteration in which the user pressed A.
     // If we did not reset it here, confirmAction() would fire every frame
-    // after the first press — feeding the pet repeatedly without extra presses.
+    // after the first press, feeding the pet repeatedly without extra presses.
     confirmActionRequested = false;
 
     switch (currentScreen) {
@@ -32,7 +32,7 @@ void NavigationManager::update(const ButtonHandler& buttons, bool backSelected) 
 }
 
 void NavigationManager::handleMainScreenInput(const ButtonHandler& buttons) {
-    // From Main, a single button press jumps straight to another screen — no
+    // From Main, a single button press jumps straight to another screen, with no
     // intermediate selection step. Each destination is gated by its feature, so
     // a button does nothing when the screen it leads to is switched off.
     #ifdef ENABLE_ACTION_MENU
@@ -51,7 +51,7 @@ void NavigationManager::handleMainScreenInput(const ButtonHandler& buttons) {
 
 #ifdef ENABLE_MULTISCREEN
 void NavigationManager::handleStatsScreenInput(const ButtonHandler& buttons) {
-    // Stats is a read-only screen — any button press returns to Main.
+    // Stats is a read-only screen. Any button press returns to Main.
     if (buttons.wasButtonBPressed() || buttons.wasButtonCPressed() || buttons.wasButtonAPressed()) {
         currentScreen = SCREEN_MAIN;
     }
@@ -60,7 +60,7 @@ void NavigationManager::handleStatsScreenInput(const ButtonHandler& buttons) {
 
 #ifdef ENABLE_ACTION_MENU
 void NavigationManager::handleInteractScreenInput(const ButtonHandler& buttons, bool backSelected) {
-    // B and C are NOT handled here — loop() calls menu.update(buttons) first
+    // B and C are NOT handled here: loop() calls menu.update(buttons) first
     // so they cycle through actions rather than triggering a screen switch.
     // This handler only cares about A: either go back to Main or confirm an action.
     if (buttons.wasButtonAPressed()) {

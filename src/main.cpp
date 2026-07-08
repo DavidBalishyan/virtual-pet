@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "M5StickCPlus2.h"
-#include "../lib/Config/scaffold_config.h"  // The ENABLE_* feature switches — read this first.
+#include "../lib/Config/scaffold_config.h"  // The ENABLE_* feature switches. Read this first.
 #include "../lib/Pet/pet.h"
 #include "../lib/Display/display_manager.h"
 #include "../lib/Imu/tilt_motion.h"
@@ -23,16 +23,16 @@
 #endif
 
 // -------------------------------------------------------------------------
-// SPRITE_TEST — quick render test for Task 12.
+// SPRITE_TEST: quick render test for Task 12.
 // When this is defined, setup() draws one sprite to the screen and stops.
-// The entire game loop is bypassed — nothing else runs.
+// The entire game loop is bypassed. Nothing else runs.
 // To return to normal operation, comment out or delete this #define.
 // -------------------------------------------------------------------------
 // #define SPRITE_TEST
 #include "../lib/Display/sprites/80x80_test.h"
 
 // -------------------------------------------------------------------------
-// TILT_MOVEMENT_ENABLED — on/off switch for the optional tilt-movement demo.
+// TILT_MOVEMENT_ENABLED: on/off switch for the optional tilt-movement demo.
 // Tilt is part of the motion feature, so it only exists when ENABLE_IMU_PLAY
 // is on. When true, the pet sprite slides around the screen to follow how the
 // device is tilted (driven by the accelerometer). When false, the pet is
@@ -43,7 +43,7 @@
 static const bool TILT_MOVEMENT_ENABLED = true;
 #endif
 
-// Global instances — one object per system area.
+// Global instances. One object per system area.
 // Each manager is responsible for exactly one job.
 Pet             myPet;    // Holds all of the pet's stats and care actions.
 DisplayManager  display;  // Draws everything to the screen.
@@ -68,7 +68,7 @@ WirelessManager wireless; // Broadcasts a WiFi AP and serves the web dashboard.
 #endif
 ClockManager  petClock;    // Reads the BM8563 RTC for the on-screen clock.
 
-// handleDeathScreen() — the only interaction once the pet has died: pressing
+// handleDeathScreen(): the only interaction once the pet has died: pressing
 // Button A starts a new game by resetting the pet's stats.
 void handleDeathScreen() {
     if (buttons.wasButtonAPressed()) {
@@ -85,7 +85,7 @@ void handleDeathScreen() {
 }
 
 #ifdef DEBUG
-// printPetStateToSerial() — every few seconds, print the pet's stats to the
+// printPetStateToSerial(): every few seconds, print the pet's stats to the
 // Serial Monitor so you can watch them change live (and confirm a saved stat
 // reloaded after a power-cycle). Throttled with the same millis() pattern as the
 // stat timers so it does not flood the monitor. Only compiled when DEBUG is on
@@ -95,7 +95,7 @@ void printPetStateToSerial() {
     const unsigned long PRINT_INTERVAL = 3000;  // print once every 3 seconds
 
     if (millis() - lastPrintTime < PRINT_INTERVAL) {
-        return;  // not time yet — leave without printing
+        return;  // not time yet. Leave without printing
     }
     lastPrintTime = millis();
 
@@ -105,7 +105,7 @@ void printPetStateToSerial() {
 }
 #endif
 
-// updateLivePet() — one frame of normal gameplay while the pet is alive: run the
+// updateLivePet(): one frame of normal gameplay while the pet is alive: run the
 // automatic stat timers, cycle the menu when the Interact screen is showing, let
 // navigation switch screens, confirm a chosen action, and play on a shake gesture.
 void updateLivePet() {
@@ -122,10 +122,10 @@ void updateLivePet() {
     }
     #endif
 
-    // Update navigation — reads button input and switches screens if needed.
+    // Update navigation. Reads button input and switches screens if needed.
     // This must run AFTER menu.update() so the latest "is Back highlighted?"
     // value is what NavigationManager sees. We pass that single fact as a
-    // bool rather than handing over the whole menu object — NavigationManager
+    // bool rather than handing over the whole menu object. NavigationManager
     // does not need to know what an ActionMenu is. Reading it into a named local
     // gives us one place to supply a fallback when the menu is switched off.
     #ifdef ENABLE_ACTION_MENU
@@ -161,13 +161,13 @@ void updateLivePet() {
 
     // CHALLENGE (Session 3): when the tilt demo is on, make a big tilt trigger an
     // interaction of YOUR choice. The live tilt is imu.getAccelX() / imu.getAccelY()
-    // (or spriteMotion's offset). Copy the shape of the shake check above — e.g.
-    // "if the device is tilted far enough, call myPet.sleep();" — and decide which
+    // (or spriteMotion's offset). Copy the shape of the shake check above, e.g.
+    // "if the device is tilted far enough, call myPet.sleep();", and decide which
     // action it fires (feed / play / sleep / bathe / heal).
     #endif
 }
 
-// renderCurrentScreen() — draws the whole screen for this frame. DisplayManager
+// renderCurrentScreen(): draws the whole screen for this frame. DisplayManager
 // takes plain values (not manager objects), so we pull the handful of stats and
 // menu fields it needs and hand them over. NavigationManager decides which screen
 // to draw, and isInDeadState() tells it whether to show the death screen.
@@ -222,8 +222,8 @@ void renderCurrentScreen() {
 // This is an embedded device, so there is no main() that we write ourselves.
 // When the M5StickC powers on, the ESP32's Arduino core runs its own start-up
 // code and then calls the two functions below for us:
-//   • setup() runs ONCE — use it to initialise the hardware and load saved data.
-//   • loop()  runs FOREVER — the core calls it over and over, as fast as it can.
+//   - setup() runs ONCE. Use it to initialise the hardware and load saved data.
+//   - loop()  runs FOREVER. The core calls it over and over, as fast as it can.
 // Together, setup() + loop() are this program's main(): the one-time set-up,
 // then an endless cycle of "read inputs, update the pet, draw the screen".
 // -------------------------------------------------------------------------
@@ -244,8 +244,8 @@ void setup() {
     int spriteX = (135 - SPRITE_80X80_TEST_WIDTH)  / 2;
     int spriteY = (240 - SPRITE_80X80_TEST_HEIGHT) / 2;
 
-    // Draw the sprite. The last argument is the transparent colour key —
-    // any pixel matching 0xF81F (magenta) is skipped, letting black show through.
+    // Draw the sprite. The last argument is the transparent colour key.
+    // Any pixel matching 0xF81F (magenta) is skipped, letting black show through.
     M5.Lcd.pushImage(spriteX, spriteY,
                      SPRITE_80X80_TEST_WIDTH,
                      SPRITE_80X80_TEST_HEIGHT,
@@ -290,7 +290,7 @@ void setup() {
 
 void loop() {
     #ifdef SPRITE_TEST
-    return; // Nothing to do — sprite is already drawn in setup().
+    return; // Nothing to do. Sprite is already drawn in setup().
     #endif
 
     M5.update();      // Read the latest hardware state (buttons, IMU, etc.)
@@ -323,7 +323,7 @@ void loop() {
     }
     #endif
 
-    // Run the state machine — sets STATE_DEAD when a stat hits a fatal level, and
+    // Run the state machine. Sets STATE_DEAD when a stat hits a fatal level, and
     // plays the pet's own fullness/sickness/death sounds when a stat crosses its
     // warning threshold. Runs first so the dead check below is always up to date.
     myPet.updateState(
@@ -346,7 +346,7 @@ void loop() {
 
     #ifdef DEBUG
     // Print the pet's stats to the Serial Monitor (throttled) so you can watch
-    // them change live — open it with `pio device monitor`.
+    // them change live. Open it with `pio device monitor`.
     printPetStateToSerial();
     #endif
 }

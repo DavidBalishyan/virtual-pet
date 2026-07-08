@@ -1,7 +1,7 @@
 #ifndef ACTION_MENU_H
 #define ACTION_MENU_H
 
-#include "../Config/scaffold_config.h"  // ENABLE_* feature switches — read this first.
+#include "../Config/scaffold_config.h"  // ENABLE_* feature switches. Read this first.
 #include "../Pet/pet.h"
 #include "../Display/display_manager.h"
 #include "../Display/screen_layout.h"
@@ -25,13 +25,13 @@
 // Available Actions: Feed, Play, Sleep, Bathe, Heal, Save, Back
 
 // ---------------------------------------------------------------------------
-// TO ADD A NEW ACTION — the extension seam (used by the Session 2 challenge).
+// TO ADD A NEW ACTION: the extension seam (used by the Session 2 challenge).
 // Five small steps:
 //   1. Add an `ACTION_*` value to the enum below.
-//   2. Add a row in the `actions[]` setup in action_menu.cpp — name, description,
+//   2. Add a row in the `actions[]` setup in action_menu.cpp: name, description,
 //      and the `RelevantStat` it changes.
 //   3. Add a `case` in `confirmAction()` (action_menu.cpp) that calls the Pet method.
-//   4. Add that method to `Pet` (pet.h/.cpp) — copy `feed()` as the template.
+//   4. Add that method to `Pet` (pet.h/.cpp). Copy `feed()` as the template.
 //   5. Bump `NUM_ACTIONS` so the menu's B/C wrap-around counts the new entry.
 // ---------------------------------------------------------------------------
 
@@ -48,7 +48,7 @@ enum ActionType {
     ACTION_HEAL,
     ACTION_DRINK,
     #ifdef ENABLE_PERSISTENCE
-    ACTION_SAVE,   // Only exists when persistence is on — it writes the pet to NVS
+    ACTION_SAVE,   // Only exists when persistence is on. It writes the pet to NVS
     #endif
     ACTION_BACK    // Returns the user to the Main screen without doing anything
 };
@@ -56,7 +56,7 @@ enum ActionType {
 // Action bundles everything DisplayManager needs to know about one menu entry:
 // what to call it, what it does, and which stat it affects.
 // Adding relevantStat here means the display layer never needs a separate
-// switch statement to figure out which bar to highlight — it just reads the field.
+// switch statement to figure out which bar to highlight. It just reads the field.
 struct Action {
     ActionType   type;
     const char*  name;
@@ -81,28 +81,28 @@ private:
 public:
     ActionMenu();
 
-    // update() — call once per loop when the Interact screen is active.
+    // update(): call once per loop when the Interact screen is active.
     // Reads Button B (next) and Button C (previous) to cycle through actions.
-    // Only call this when the Interact screen is visible — otherwise the
+    // Only call this when the Interact screen is visible. Otherwise the
     // selection would change even while the user is on a different screen.
     void update(const ButtonHandler& buttons);
 
-    // getSelectedAction() — returns the full Action struct for the highlighted entry.
+    // getSelectedAction(): returns the full Action struct for the highlighted entry.
     Action getSelectedAction() const;
 
-    // getCurrentActionIndex() — returns the numeric position of the selected action (0–6).
+    // getCurrentActionIndex(): returns the numeric position of the selected action (0-6).
     int getCurrentActionIndex() const;
 
-    // isBackSelected() — returns true when the user has scrolled to "Back".
+    // isBackSelected(): returns true when the user has scrolled to "Back".
     // main.cpp uses this to switch screens instead of calling confirmAction().
     bool isBackSelected() const;
 
-    // getRelevantStat() — returns which stat is affected by the selected action.
+    // getRelevantStat(): returns which stat is affected by the selected action.
     // DisplayManager uses this to draw the correct contextual bar on the Interact screen.
     RelevantStat getRelevantStat() const;
 
-    // confirmAction() — executes the selected action and plays the matching sound.
-    // Only call this when isBackSelected() is false — Back is handled separately.
+    // confirmAction(): executes the selected action and plays the matching sound.
+    // Only call this when isBackSelected() is false. Back is handled separately.
     // The parameters only exist when their feature is switched on:
     // the speaker when sound is on, and the storage + timers when persistence
     // is on (the Save action writes pet stats and timer timestamps to NVS).

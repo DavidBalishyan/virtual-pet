@@ -38,8 +38,8 @@ void ImuManager::update() {
     // A shake "starts" only on the frame it crosses the threshold from below.
     bool shakeJustStarted = currentShakeDetected && !prevShakeDetected;
 
-    // Even then, only report it if the cooldown has elapsed since the last report —
-    // this stops one continuous shake (or rapid repeats) from triggering play()
+    // Even then, only report it if the cooldown has elapsed since the last report.
+    // This stops one continuous shake (or rapid repeats) from triggering play()
     // over and over and draining the pet's stats in a couple of seconds.
     if (shakeJustStarted && (millis() - lastShakeTime > SHAKE_COOLDOWN_INTERVAL)) {
         shakeReportedThisFrame = true;

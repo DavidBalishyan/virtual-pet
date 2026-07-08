@@ -2,7 +2,7 @@
 #include <Preferences.h>
 #include "storage_manager.h"
 
-// The NVS namespace — groups all keys for this project under one label.
+// The NVS namespace. Groups all keys for this project under one label.
 // Using a namespace means these keys will never collide with keys written by
 // other libraries that also use the Preferences / NVS system.
 const char* StorageManager::NAMESPACE = "virtual-pet";
@@ -47,7 +47,7 @@ void StorageManager::save(const Pet& pet, const TimerManager& timers) {
 // load()
 // Opens the NVS namespace in read-only mode and applies each saved stat to the
 // pet via its setter. The second argument to getInt() is the default value used
-// when no save data exists yet — these match the Pet constructor's starting values
+// when no save data exists yet. These match the Pet constructor's starting values
 // so a fresh device behaves identically to a newly constructed Pet object.
 void StorageManager::load(Pet& pet, TimerManager& timers) {
 #ifdef DEBUG
@@ -70,7 +70,7 @@ void StorageManager::load(Pet& pet, TimerManager& timers) {
     String savedName = prefs.getString("petName", "Pixel");
     pet.setPetName(savedName.c_str());
 
-    // Load timer timestamps — default 0 means "first boot", handled by TimerManager.
+    // Load timer timestamps. Default 0 means "first boot", handled by TimerManager.
     timers.setLastFullnessDecayTime(           prefs.getInt("t_fullness",     0));
     timers.setLastHappinessDecayTime(          prefs.getInt("t_happiness",    0));
     timers.setLastEnergyDrainTime(             prefs.getInt("t_energy",       0));

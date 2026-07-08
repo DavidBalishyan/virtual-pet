@@ -121,7 +121,7 @@ void ActionMenu::confirmAction(Pet& pet, DisplayManager& display
         #endif
         case ACTION_BACK:
             // Back is handled by the NavigationManager before confirmAction() is called.
-            // If we somehow reach here, do nothing — there is no pet action to run.
+            // If we somehow reach here, do nothing. There is no pet action to run.
             return;
     }
 }

@@ -7,18 +7,18 @@
 #define FAST_TEST
 
 // ---------------------------------------------------------------------------
-// STAT BALANCE — two complete sets of decay rates.
+// STAT BALANCE. Two complete sets of decay rates.
 //
 // The pet has four fatal stats: fullness, energy, happiness and hydration (all die at 0).
 // These constants decide how fast each one moves, and therefore how
 // long the pet survives if you ignore it. Getting them right is "balancing" how
-// the pet behaves — too fast and the pet is impossible to keep alive, too slow
+// the pet behaves. Too fast and the pet is impossible to keep alive, too slow
 // and nothing you do seems to matter.
 //
 // We keep TWO sets and pick one with the FAST_TEST switch at the top of this file:
 //
 //   * The SHIPPED set (the #else branch) is the real, balanced behaviour. An
-//     untouched pet starves in about 8 minutes — fullness is tuned to empty first,
+//     untouched pet starves in about 8 minutes. Fullness is tuned to empty first,
 //     before happiness or energy, so the on-screen bar is what drives the death.
 //     Long enough that caring for it feels meaningful, short enough to demo.
 //
@@ -29,12 +29,12 @@
 //
 // Both sets are kept on purpose: comparing the two numbers side by side is the
 // clearest way to see how the same program can behave completely differently just
-// by changing these intervals. This is a compile-time choice — only ONE set ends
-// up in the firmware — not a setting that can change while the program runs.
+// by changing these intervals. This is a compile-time choice: only ONE set ends
+// up in the firmware, not a setting that can change while the program runs.
 //
 // In BOTH sets every stat moves by 1 point per interval, so each interval reads
 // directly as "lose 1 point every N milliseconds" and the time to cross the full
-// 0–100 range is simply (100 × interval).
+// 0-100 range is simply (100 × interval).
 //
 // NOTE: Intervals are now in SECONDS (not milliseconds) because the RTC epoch
 // clock has second granularity. The numeric values are the original ms values
@@ -84,7 +84,7 @@ const int HYDRATION_DECAY_AMOUNT = 1;
 const int CLEANLINESS_DANGER_THRESHOLD = 30;
 
 
-// Constructor — initialise all timestamps to 0.
+// Constructor: initialise all timestamps to 0.
 // Setting them to 0 signals "not yet initialised" to the apply* helpers,
 // which set them to the current time on the first update() call.
 TimerManager::TimerManager()
@@ -97,7 +97,7 @@ TimerManager::TimerManager()
 }
 
 
-// update() — the single function main.cpp calls every loop().
+// update(): the single function main.cpp calls every loop().
 // It delegates each timed job to its own private helper method.
 // To add a new automatic stat change, add a method and call it here.
 void TimerManager::update(Pet& pet, time_t currentEpochSecs) {
@@ -168,7 +168,7 @@ void TimerManager::applyEnergyDrain(Pet& pet, time_t currentTime) {
 // applyCleanlinessDecay()
 // Checks whether CLEANLINESS_DECAY_INTERVAL seconds have passed since
 // cleanliness was last decreased. If yes, decreases cleanliness and resets the timer.
-// The pet gets dirty over time — bathing is the only way to keep it clean.
+// The pet gets dirty over time. Bathing is the only way to keep it clean.
 void TimerManager::applyCleanlinessDecay(Pet& pet, time_t currentTime) {
     if (lastCleanlinessDecayTime == 0) {
         lastCleanlinessDecayTime = currentTime;
@@ -186,7 +186,7 @@ void TimerManager::applyCleanlinessDecay(Pet& pet, time_t currentTime) {
 
 // applySicknessAccumulation()
 // Increases sick only when cleanliness has fallen below CLEANLINESS_DANGER_THRESHOLD.
-// A dirty pet gradually becomes unwell — the user must bathe it to stop this.
+// A dirty pet gradually becomes unwell. The user must bathe it to stop this.
 void TimerManager::applySicknessAccumulation(Pet& pet, time_t currentTime) {
     if (lastSicknessAccumulationTime == 0) {
         lastSicknessAccumulationTime = currentTime;
@@ -224,7 +224,7 @@ void TimerManager::applyHydrationDecay(Pet& pet, time_t currentTime) {
 
 
 // ---------------------------------------------------------------------------
-// Getters — return each timer's last-fire timestamp.
+// Getters: return each timer's last-fire timestamp.
 // ---------------------------------------------------------------------------
 time_t TimerManager::getLastFullnessDecayTime() const { return lastFullnessDecayTime; }
 time_t TimerManager::getLastHappinessDecayTime() const { return lastHappinessDecayTime; }
@@ -234,7 +234,7 @@ time_t TimerManager::getLastSicknessAccumulationTime() const { return lastSickne
 time_t TimerManager::getLastHydrationDecayTime() const { return lastHydrationDecayTime; }
 
 // ---------------------------------------------------------------------------
-// Setters — restore each timer's last-fire timestamp from saved data.
+// Setters: restore each timer's last-fire timestamp from saved data.
 // ---------------------------------------------------------------------------
 void TimerManager::setLastFullnessDecayTime(time_t t) { lastFullnessDecayTime = t; }
 void TimerManager::setLastHappinessDecayTime(time_t t) { lastHappinessDecayTime = t; }

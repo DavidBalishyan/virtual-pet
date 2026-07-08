@@ -67,7 +67,7 @@ void test_reset_updates_timestamp(void) {
     setMillis(500);
     anim.reset();  // sets lastFrameAdvanceTime = 500
 
-    setMillis(600);  // only 100ms later — should NOT advance
+    setMillis(600);  // only 100ms later, should NOT advance
     anim.update();
     TEST_ASSERT_EQUAL_INT(0, anim.getCurrentFrame());
 

@@ -20,15 +20,15 @@
  */
 class ButtonHandler {
 private:
-    // GPIO pin for Button C — not exposed by the M5StickCPlus2 library so read directly
+    // GPIO pin for Button C. Not exposed by the M5StickCPlus2 library so read directly
     static const int BUTTON_C_PIN = 35;
 
-    // Button states from the previous frame — used to detect the moment a button first goes down
+    // Button states from the previous frame. Used to detect the moment a button first goes down
     bool prevButtonA;
     bool prevButtonB;
     bool prevButtonC;
 
-    // Button states from the current frame — updated each call to update()
+    // Button states from the current frame. Updated each call to update()
     bool currentButtonA;
     bool currentButtonB;
     bool currentButtonC;

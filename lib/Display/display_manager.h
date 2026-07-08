@@ -2,7 +2,7 @@
 #define DISPLAY_MANAGER_H
 
 #include <M5StickCPlus2.h>
-#include "../Config/scaffold_config.h"  // ENABLE_* feature switches — read this first.
+#include "../Config/scaffold_config.h"  // ENABLE_* feature switches. Read this first.
 #include "screen_layout.h"
 // One 80x80 sprite per mood. spriteForMood() maps a MoodSprite to the matching
 // array, so the pet's face changes with how it feels. All four are the same
@@ -47,14 +47,14 @@ private:
     static constexpr StatBarZone HYDRATION_BAR_ZONE = { 136, 146 };
 
     // -----------------------------------------------------------------------
-    // Main screen zone constants — no stat bars, so the face gets more room.
+    // Main screen zone constants. No stat bars, so the face gets more room.
     // The bottom nav bar lets the user pick Stats or Interact.
     // -----------------------------------------------------------------------
     static constexpr int         MAIN_FACE_CENTER_Y = 110;
     static constexpr int         MAIN_MOOD_Y        = 155;
     // A single fullness bar on the Main screen, drawn in the band between the mood
     // word and the nav bar. This gives the pet one visible, at-a-glance stat on
-    // the home screen — the bar the Session 1 dials (starting fullness and decay
+    // the home screen. The bar the Session 1 dials (starting fullness and decay
     // speed) visibly change. Positions mirror the Interact contextual bar so the
     // bar sits in the same place on both screens.
     static constexpr int         MAIN_FULLNESS_LABEL_Y = 177;
@@ -98,9 +98,9 @@ private:
     // Off-screen double-buffer. Every drawing call below targets this canvas
     // instead of the LCD directly; the finished frame is then copied to the
     // screen in one shot by pushCanvas(). Drawing off-screen and pushing once
-    // is what lets us redraw every loop — including the animated sprite —
+    // is what lets us redraw every loop, including the animated sprite,
     // without the screen ever flickering. The buffer is 135x240 16-bit pixels
-    // (~63 KB), allocated once in init(). See Hardware Gotcha 3 in DEV_ROADMAP.md.
+    // (~63 KB), allocated once in init().
     M5Canvas canvas = M5Canvas(&M5.Lcd);
 
     // Times the pet sprite's frame cycling. Created with the sprite's frame
@@ -111,13 +111,13 @@ private:
     // gain a second frame, bump this to that frame count and the loop resumes.
     AnimationManager petAnimation = AnimationManager(SPRITE_NEUTRAL_PLACEHOLDER_FRAME_COUNT);
 
-    // pushCanvas() — copies the finished off-screen frame to the LCD in one
+    // pushCanvas(): copies the finished off-screen frame to the LCD in one
     // operation. Called at the end of every render path so the screen only
     // ever updates as a complete frame.
     void pushCanvas();
 
     // -----------------------------------------------------------------------
-    // Private render methods — one per screen.
+    // Private render methods. One per screen.
     // Each owns the layout and redraw logic for its screen only.
     // -----------------------------------------------------------------------
     // spriteOffsetX/Y slide the pet sprite away from centre to follow the device
@@ -157,7 +157,7 @@ private:
     // Separated from drawPetSprite() so each screen can position the text independently.
     void showPetMoodText(MoodSprite mood, int textY);
 
-    // spriteForMood() — maps a mood to the pixel data for its current frame.
+    // spriteForMood(): maps a mood to the pixel data for its current frame.
     // The one place that decides which artwork each mood uses, so adding a new
     // mood means adding a single case here.
     const uint16_t* spriteForMood(MoodSprite mood, int frame);
@@ -168,7 +168,7 @@ public:
     void init();
 
     // Screen management
-    // Default colour is TFT_BLACK — callers can override to clear with any colour.
+    // Default colour is TFT_BLACK. Callers can override to clear with any colour.
     // Using a default parameter (familiar from JavaScript) keeps both call styles
     // working without needing two separate methods.
     void clearScreen(uint32_t color = TFT_BLACK);
@@ -186,11 +186,11 @@ public:
     void printText(const char* text, int x, int y, uint32_t color = TFT_WHITE, uint8_t size = 2);
     void printCenteredText(const char* text, int y, uint32_t color = TFT_WHITE, uint8_t size = 2);
 
-    // renderDisplay() — the single call that loop() makes every frame.
+    // renderDisplay(): the single call that loop() makes every frame.
     // screenState comes from NavigationManager.
     // petIsDead bypasses the normal screen routing and shows the death screen.
     // selectedActionName and relevantStat are extracted from ActionMenu by the
-    // caller — keeping DisplayManager unaware of it.
+    // caller. Keeping DisplayManager unaware of it.
     // spriteOffsetX/Y nudge the pet sprite away from its normal centre so it can
     // follow the device tilt. They are plain pixel counts; pass 0, 0
     // to draw the pet dead-centre exactly as before.
@@ -201,7 +201,7 @@ public:
                        int spriteOffsetX, int spriteOffsetY,
                        int clockHours, int clockMinutes);
 
-    // Pet display helpers — used internally and by the three private render methods
+    // Pet display helpers. Used internally and by the three private render methods
     #ifdef ENABLE_MULTISCREEN
     // Both are used only by the Stats screen: the five-bar readout and its mood label.
     void showPetStatus(int happiness, int fullness, int energy, int cleanliness, int sick, int hydration, const char* petName);
@@ -211,16 +211,16 @@ public:
     void showDeathScreen();
 
     #ifdef ENABLE_ACTION_MENU
-    // drawMenuIndicator() — draws the compact action name overlay at the bottom.
+    // drawMenuIndicator(): draws the compact action name overlay at the bottom.
     // Used on the Interact screen. Takes the action name as a plain string so
     // this helper has no knowledge of ActionMenu's internals.
     void drawMenuIndicator(const char* selectedActionName, int x, int y);
     #endif
 
-    // drawStatusBar() — draws a single labelled progress bar.
+    // drawStatusBar(): draws a single labelled progress bar.
     void drawStatusBar(int value, int maxValue, int x, int y, int width, uint32_t color);
 
-    // drawPetSprite() — draws a bitmap sprite as the pet's face. The sprite is
+    // drawPetSprite(): draws a bitmap sprite as the pet's face. The sprite is
     // centred horizontally on the screen, with its vertical centre at faceCenterY.
     // mood selects which artwork to draw: drawPetSprite() asks spriteForMood()
     // for the right pixels, so the pet's face matches how it is feeling.

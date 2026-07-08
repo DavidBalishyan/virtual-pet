@@ -1,29 +1,29 @@
 #ifndef PET_H
 #define PET_H
 
-#include "../Config/scaffold_config.h"  // ENABLE_* feature switches — read this first.
+#include "../Config/scaffold_config.h"  // ENABLE_* feature switches. Read this first.
 #ifdef ENABLE_SOUND
 #include "../Speaker/speaker_manager.h"
 #endif
 #include "../Display/screen_layout.h"  // for the MoodSprite enum returned by computeMood()
 
-// PetState — the list of behaviours the pet can currently be doing.
+// PetState: the list of behaviours the pet can currently be doing.
 // Only one state is active at a time.
 enum PetState {
-    STATE_IDLE,      // Default — pet is awake but doing nothing
-    STATE_EATING,    // Triggered by feed() — pet is eating
-    STATE_SLEEPING,  // Triggered by sleep() — pet is resting
-    STATE_PLAYING,   // Triggered by play() — pet is exercising
-    STATE_SICK,      // Entered automatically when sick stat is high — pet is unwell
-    STATE_HEALING,   // Triggered by heal() — pet is receiving treatment
-    STATE_BATHING,   // Triggered by bathe() — pet is being cleaned
-    STATE_DRINKING,  // Triggered by drink() — pet is drinking
+    STATE_IDLE,      // Default. Pet is awake but doing nothing
+    STATE_EATING,    // Triggered by feed(). Pet is eating
+    STATE_SLEEPING,  // Triggered by sleep(). Pet is resting
+    STATE_PLAYING,   // Triggered by play(). Pet is exercising
+    STATE_SICK,      // Entered automatically when sick stat is high. Pet is unwell
+    STATE_HEALING,   // Triggered by heal(). Pet is receiving treatment
+    STATE_BATHING,   // Triggered by bathe(). Pet is being cleaned
+    STATE_DRINKING,  // Triggered by drink(). Pet is drinking
     STATE_DEAD       // Entered when any critical stat reaches a fatal level
 };
 
 class Pet {
 private:
-    // To add a NEW STAT — the extension seam (used by the Session 2 challenge): add the
+    // To add a NEW STAT. The extension seam (used by the Session 2 challenge): add the
     // field here + its getter/setter (below) + a DEFAULT_ constant; a decay rule in
     // TimerManager (time_manager.cpp); a RelevantStat value (screen_layout.h) + a
     // drawContextualStatBar case (display_manager.cpp); and a care action that restores
@@ -44,7 +44,7 @@ private:
     static const int MAX_NAME_LENGTH = 16;
     char petName[MAX_NAME_LENGTH];  // Display name shown in the title zone; default is "Pixel"
 
-    // Timestamps used to rate-limit the alerts — same millis() pattern as TimerManager.
+    // Timestamps used to rate-limit the alerts. Same millis() pattern as TimerManager.
     // The pet plays each alert at most once per interval (see updateState()).
     unsigned long lastFullnessAlertTime;
     unsigned long lastSicknessAlertTime;
@@ -61,11 +61,11 @@ private:
     static const unsigned long SICKNESS_ALERT_INTERVAL = 15000;
     static const unsigned long THIRST_ALERT_INTERVAL   = 15000;
 
-    // constrainValue() — returns value forced into the legal 0..100 range.
+    // constrainValue(): returns value forced into the legal 0..100 range.
     int constrainValue(int value) const;
 
 public:
-    // Starting values for a brand-new pet — used by the constructor and by
+    // Starting values for a brand-new pet. Used by the constructor and by
     // StorageManager::load() so both share a single source of truth.
     static const int DEFAULT_FULLNESS    = 90;
     static const int DEFAULT_TIRED       = 20;
@@ -124,14 +124,14 @@ public:
     // Returns the current behavioural state of the pet
     PetState getState() const;
 
-    // Returns true when the pet is in the dead state — lets callers ask the
+    // Returns true when the pet is in the dead state. Lets callers ask the
     // game-over question without comparing against the STATE_DEAD enum value.
     bool isInDeadState() const;
 
     // Changes the pet's current behavioural state
     void setState(PetState newState);
 
-    // Runs once per loop — checks the current state and applies any behaviour that
+    // Runs once per loop. Checks the current state and applies any behaviour that
     // belongs to it. When sound is switched on it also plays the pet's own alert
     // and death sounds, so it takes the speaker; with sound off it takes nothing.
     void updateState(

@@ -23,7 +23,7 @@ class ImuManager {
 private:
     // G-force magnitude above which the device is considered to be shaking.
     // Total magnitude = sqrt(x² + y² + z²). At rest this is ~1.0 G (gravity).
-    // A gentle shake typically peaks at 2.0–3.0 G; 1.8 is a comfortable trigger point.
+    // A gentle shake typically peaks at 2.0-3.0 G; 1.8 is a comfortable trigger point.
     static constexpr float SHAKE_THRESHOLD = 1.8f;
 
     // Smallest gap (in milliseconds) between two reported shakes. One real shake
@@ -50,7 +50,7 @@ private:
     bool shakeReportedThisFrame;
 
 public:
-    // Constructor — initialises all values to safe defaults before first update()
+    // Constructor: initialises all values to safe defaults before first update()
     ImuManager();
 
     // update()
@@ -59,7 +59,7 @@ public:
     void update();
 
     // wasShaken()
-    // Returns true only on the single frame when a fresh shake is reported — the
+    // Returns true only on the single frame when a fresh shake is reported. The
     // magnitude crossed SHAKE_THRESHOLD this frame AND the cooldown has elapsed since
     // the last reported shake. The actual decision is made in update(); this is a
     // plain read-only query, so it stays const.

@@ -3,14 +3,14 @@
 
 // Pet()
 // Constructs a brand-new pet in a healthy, awake-and-content starting state
-// so the device looks alive the very first time it boots — the user should
+// so the device looks alive the very first time it boots. The user should
 // not have to do anything before the pet appears on screen with sensible
 // stats. The starting values come from the DEFAULT_* constants in pet.h so
 // the constructor, StorageManager::load(), and reset() can never drift out
 // of agreement about what "a new pet" means.
 //
 // The colon-introduced list (`: fullness(...), tired(...), ...`) is a member
-// initialiser list — it sets each field before the constructor body runs.
+// initialiser list. It sets each field before the constructor body runs.
 // It is the canonical C++ way to give member variables their initial values.
 Pet::Pet()
     : fullness(DEFAULT_FULLNESS), tired(DEFAULT_TIRED), happy(DEFAULT_HAPPY),
@@ -45,7 +45,7 @@ void Pet::setPetName(const char* name) {
 // stat must go through the matching setter below.
 //
 // The `const` at the end of each declaration is C++'s way of promising that
-// the method does not modify the object — useful both as documentation and
+// the method does not modify the object, useful both as documentation and
 // because the compiler enforces it.
 int Pet::getFullness() const      { return fullness; }
 int Pet::getTired() const       { return tired; }
@@ -58,7 +58,7 @@ int Pet::getHydration() const   { return hydration; }
 
 // Setters
 // Each setter stores the new value after passing it through constrainValue()
-// so callers never have to constrain their own input — pet.setHappy(150) silently
+// so callers never have to constrain their own input: pet.setHappy(150) silently
 // becomes 100, and pet.setHappy(-5) silently becomes 0. Constraining inside
 // the setter (and not in a separate "constrainAll" sweep) means each setter
 // only touches the one stat it owns.
@@ -73,8 +73,8 @@ void Pet::setHydration(int value)   { hydration   = constrainValue(value); }
 
 // Pet care actions
 // Each action changes the pet's state, then adjusts several stats by routing
-// every change through the matching setter. Going through the setters — even
-// from inside the class — means the setters remain the only place where stat
+// every change through the matching setter. Going through the setters, even
+// from inside the class, means the setters remain the only place where stat
 // values are written. If we ever change how setters work (extra constraints,
 // logging, change events), the action methods inherit those changes for free
 // without needing to be edited.
@@ -151,7 +151,7 @@ void Pet::updateState(
     SpeakerManager& speaker
     #endif
 ) {
-    // Death overrides every other state — if any critical stat is fatal, stop here.
+    // Death overrides every other state. If any critical stat is fatal, stop here.
     if (isDead()) {
         #ifdef ENABLE_SOUND
         // The death sound plays only on the first frame of death (when transitioning
@@ -166,8 +166,8 @@ void Pet::updateState(
 
     #ifdef ENABLE_SOUND
     // The alerts exist only to make a sound, so the whole block lives behind the
-    // sound switch. Check whether a low-fullness (hunger) alert is due — same
-    // millis() pattern as TimerManager — then play it and reset the timer.
+    // sound switch. Check whether a low-fullness (hunger) alert is due (same
+    // millis() pattern as TimerManager), then play it and reset the timer.
     if (fullness <= FULLNESS_ALERT_THRESHOLD) {
         if (millis() - lastFullnessAlertTime >= FULLNESS_ALERT_INTERVAL) {
             speaker.playHungerAlertSound();
@@ -175,7 +175,7 @@ void Pet::updateState(
         }
     }
 
-    // Check whether a sickness alert is due — same pattern as the fullness alert above.
+    // Check whether a sickness alert is due. Same pattern as the fullness alert above.
     if (sick >= SICKNESS_ALERT_THRESHOLD) {
         if (millis() - lastSicknessAlertTime >= SICKNESS_ALERT_INTERVAL) {
             speaker.playSicknessAlertSound();
@@ -201,41 +201,41 @@ void Pet::updateState(
             break;
 
         case STATE_EATING:
-            // Eating is handled instantly by feed() — return to idle
+            // Eating is handled instantly by feed(). Return to idle
             setState(STATE_IDLE);
             break;
 
         case STATE_SLEEPING:
-            // Sleeping is handled instantly by sleep() — return to idle
+            // Sleeping is handled instantly by sleep(). Return to idle
             setState(STATE_IDLE);
             break;
 
         case STATE_PLAYING:
-            // Playing is handled instantly by play() — return to idle
+            // Playing is handled instantly by play(). Return to idle
             setState(STATE_IDLE);
             break;
 
         case STATE_SICK:
-            // Pet stays sick until heal() is called — no automatic return to idle
+            // Pet stays sick until heal() is called. No automatic return to idle
             break;
 
         case STATE_HEALING:
-            // Healing is handled instantly by heal() — return to idle
+            // Healing is handled instantly by heal(). Return to idle
             setState(STATE_IDLE);
             break;
 
         case STATE_BATHING:
-            // Bathing is handled instantly by bathe() — return to idle
+            // Bathing is handled instantly by bathe(). Return to idle
             setState(STATE_IDLE);
             break;
 
         case STATE_DRINKING:
-            // Drinking is handled instantly by drink() — return to idle
+            // Drinking is handled instantly by drink(). Return to idle
             setState(STATE_IDLE);
             break;
 
         case STATE_DEAD:
-            // Nothing to do here — main.cpp handles the death screen and restart button.
+            // Nothing to do here. main.cpp handles the death screen and restart button.
             break;
     }
 }
@@ -264,7 +264,7 @@ bool Pet::isDead() const {
 // reset()
 // Restores all stats to the same starting values used in the constructor.
 // Uses the DEFAULT_* constants so the constructor, StorageManager::load(),
-// and reset() all share one source of truth — change a starting value in
+// and reset() all share one source of truth. Change a starting value in
 // pet.h and every code path agrees.
 // Called when the user chooses to restart after the pet has died.
 void Pet::reset(

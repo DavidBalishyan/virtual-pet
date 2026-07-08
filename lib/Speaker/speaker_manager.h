@@ -3,7 +3,7 @@
 
 // SpeakerManager
 // Wraps M5.Speaker to play short buzzer melodies for key pet events.
-// Each public method corresponds to one in-game event — feed, play, sleep, etc.
+// Each public method corresponds to one in-game event. Feed, play, sleep, etc.
 // Call init() once in setup(), then call the appropriate play method when an event occurs.
 class SpeakerManager {
 public:

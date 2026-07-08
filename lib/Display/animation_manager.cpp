@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "animation_manager.h"
 
-// Constructor — store the sprite's frame count and per-frame duration, and
+// Constructor: store the sprite's frame count and per-frame duration, and
 // start on frame 0. lastFrameAdvanceTime starts at 0 so the first update()
 // advances straight away (the same "fire immediately" trick TimerManager uses).
 AnimationManager::AnimationManager(int frameCount, unsigned long frameDurationMs)
@@ -11,7 +11,7 @@ AnimationManager::AnimationManager(int frameCount, unsigned long frameDurationMs
       lastFrameAdvanceTime(0) {
 }
 
-// update() — advance to the next frame once enough time has passed.
+// update(): advance to the next frame once enough time has passed.
 // Called once per loop(). Uses millis() instead of delay() so the rest of the
 // program keeps running while the sprite animates.
 void AnimationManager::update() {
@@ -31,12 +31,12 @@ void AnimationManager::update() {
     }
 }
 
-// getCurrentFrame() — the frame index DisplayManager should draw this frame.
+// getCurrentFrame(): the frame index DisplayManager should draw this frame.
 int AnimationManager::getCurrentFrame() const {
     return currentFrame;
 }
 
-// reset() — restart the animation from the first frame.
+// reset(): restart the animation from the first frame.
 // Called when the sprite should visibly start over, for example after
 // switching screens, so the pet does not appear to resume mid-bounce.
 void AnimationManager::reset() {

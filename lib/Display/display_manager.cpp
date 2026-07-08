@@ -16,7 +16,7 @@ void DisplayManager::init() {
     // Allocate the off-screen canvas. This must happen here, after M5.begin()
     // has initialised the LCD, rather than in the constructor. createSprite()
     // returns the buffer pointer, or nullptr if there was not enough heap for
-    // the ~63 KB buffer — we log that case so a failure is visible on serial
+    // the ~63 KB buffer. We log that case so a failure is visible on serial
     // rather than showing up as a mysteriously blank screen.
     if (canvas.createSprite(SCREEN_WIDTH, SCREEN_HEIGHT) == nullptr) {
         Serial.println("ERROR: could not allocate display canvas");
@@ -38,7 +38,7 @@ void DisplayManager::init() {
     pushCanvas();
 }
 
-// setBrightness() — the one place that drives the LCD backlight.
+// setBrightness(): the one place that drives the LCD backlight.
 // percent is clamped to 0-100 and scaled to the panel's native 0-255 range.
 // The dashboard calls this over WebSocket; nothing else touches brightness.
 void DisplayManager::setBrightness(int percent) {
@@ -51,13 +51,13 @@ void DisplayManager::setBrightness(int percent) {
     M5.Lcd.setBrightness(level);
 }
 
-// getBrightness() — the last brightness set, as a 0-100 percentage.
+// getBrightness(): the last brightness set, as a 0-100 percentage.
 // Lets the dashboard slider reflect the device's actual level.
 int DisplayManager::getBrightness() const {
     return brightnessPercent;
 }
 
-// pushCanvas() — copies the finished off-screen frame to the LCD in one shot.
+// pushCanvas(): copies the finished off-screen frame to the LCD in one shot.
 // The canvas was constructed with &M5.Lcd as its parent, so pushSprite() knows
 // where to send the pixels.
 void DisplayManager::pushCanvas() {
@@ -72,13 +72,13 @@ void DisplayManager::fillRect(int x, int y, int width, int height, uint32_t colo
     canvas.fillRect(x, y, width, height, color);
 }
 
-// renderDisplay() — the one call loop() makes every frame.
+// renderDisplay(): the one call loop() makes every frame.
 // It decides whether to show the death screen or one of the three live screens,
 // then delegates to the appropriate private render method.
 //
 // Action-menu information arrives as three primitives (name, relevant stat,
 // current index) rather than as an ActionMenu reference. This keeps
-// DisplayManager unaware of ActionMenu — the caller does the extraction.
+// DisplayManager unaware of ActionMenu. The caller does the extraction.
 void DisplayManager::renderDisplay(int happiness, int fullness, int energy, int cleanliness,
                                    int sick, int hydration, MoodSprite mood, const char* selectedActionName,
                                    RelevantStat relevantStat,
@@ -99,7 +99,7 @@ void DisplayManager::renderDisplay(int happiness, int fullness, int energy, int 
 
     // --- Revival: coming back from dead ---
     // The pet was dead last frame but is alive now, so it has just been reset.
-    // Clear the flag; the screen redraws this frame like any other — there is no
+    // Clear the flag; the screen redraws this frame like any other. There is no
     // throttle to nudge anymore now that every frame redraws.
     if (petWasDeadLastFrame) {
         petWasDeadLastFrame = false;
@@ -156,14 +156,14 @@ void DisplayManager::renderMainScreen(int fullness, MoodSprite mood, const char*
     showPetMoodText(mood, MAIN_MOOD_Y);
     // Only show the fullness bar on the Main screen when there is no action menu.
     // Once ENABLE_ACTION_MENU is on, the Interact screen shows the stat bars, so a
-    // bar here would be redundant — the Main screen is just the pet's face again.
+    // bar here would be redundant. The Main screen is just the pet's face again.
     #ifndef ENABLE_ACTION_MENU
     drawMainFullnessBar(fullness);
     #endif
     drawMainNavBar();
 }
 
-// drawMainFullnessBar() — draws a single labelled fullness bar on the Main screen.
+// drawMainFullnessBar(): draws a single labelled fullness bar on the Main screen.
 // The Main screen otherwise shows only the pet's face, so this is the one stat
 // the user can watch at a glance: it drops as the pet gets hungrier and is the
 // bar the Session 1 dials (starting fullness value and decay speed) visibly
@@ -183,7 +183,7 @@ void DisplayManager::drawMainFullnessBar(int fullness) {
 
 // drawMainNavBar()
 // Draws the two-tab bar at the bottom of the Main screen. The nav bar is the
-// user's entry point into the rest of the app — without it the user would
+// user's entry point into the rest of the app. Without it the user would
 // have no visible cue that B and C take them to the Interact and Stats
 // screens. Both tabs are drawn the same way (no highlight state) because
 // the Main screen has no concept of "selected tab"; a single press jumps
@@ -196,13 +196,13 @@ void DisplayManager::drawMainNavBar() {
     int tabWidth = MAIN_NAV_ZONE.width / 2;
 
     #ifdef ENABLE_MULTISCREEN
-    // Left tab — Stats
+    // Left tab. Stats
     canvas.drawRect(MAIN_NAV_ZONE.x, MAIN_NAV_ZONE.y, tabWidth, MAIN_NAV_ZONE.height, TFT_CYAN);
     printText("Stats", MAIN_NAV_ZONE.x + 6, MAIN_NAV_ZONE.y + 5, TFT_CYAN, 1);
     #endif
 
     #ifdef ENABLE_ACTION_MENU
-    // Right tab — Interact
+    // Right tab. Interact
     int rightX = MAIN_NAV_ZONE.x + tabWidth;
     canvas.drawRect(rightX, MAIN_NAV_ZONE.y, tabWidth, MAIN_NAV_ZONE.height, TFT_CYAN);
     printText("Interact", rightX + 3, MAIN_NAV_ZONE.y + 5, TFT_CYAN, 1);
@@ -238,7 +238,7 @@ void DisplayManager::renderStatsScreen(int happiness, int fullness, int energy, 
 // Interact screen render
 // Shows the pet face in the top half, a single contextual stat bar in the
 // middle (the stat the selected action affects), and the action menu
-// indicator at the very bottom — the same indicator style as before.
+// indicator at the very bottom. The same indicator style as before.
 // -----------------------------------------------------------------------
 #ifdef ENABLE_ACTION_MENU
 void DisplayManager::renderInteractScreen(int happiness, int fullness, int energy, int cleanliness,
@@ -257,7 +257,7 @@ void DisplayManager::renderInteractScreen(int happiness, int fullness, int energ
 
 #ifdef ENABLE_ACTION_MENU
 // drawContextualStatBar()
-// Draws a single stat bar in the INTERACT_STAT_ZONE area — only the one stat
+// Draws a single stat bar in the INTERACT_STAT_ZONE area. Only the one stat
 // that the currently selected action affects. The label, current value, and
 // colour all come from the relevantStat parameter, so the bar changes as the
 // user scrolls through actions.
@@ -272,7 +272,7 @@ void DisplayManager::drawContextualStatBar(int happiness, int fullness, int ener
     fillRect(INTERACT_STAT_ZONE.x, INTERACT_STAT_ZONE.y,
              INTERACT_STAT_ZONE.width, INTERACT_STAT_ZONE.height, TFT_BLACK);
 
-    // Save and Back have no specific stat — leave the area blank
+    // Save and Back have no specific stat. Leave the area blank
     if (relevantStat == STAT_NONE) {
         return;
     }
@@ -304,9 +304,9 @@ void DisplayManager::drawContextualStatBar(int happiness, int fullness, int ener
 // -----------------------------------------------------------------------
 
 #ifdef ENABLE_ACTION_MENU
-// drawMenuIndicator() — the compact action name box at the very bottom.
+// drawMenuIndicator(): the compact action name box at the very bottom.
 // Used on the Interact screen. Clears its area before drawing.
-// Takes the action name as a plain string — no ActionMenu reference needed —
+// Takes the action name as a plain string, no ActionMenu reference needed,
 // so this helper has no knowledge of the menu's internals.
 void DisplayManager::drawMenuIndicator(const char* selectedActionName, int x, int y) {
     fillRect(x, y, MENU_ZONE.width, MENU_ZONE.height, TFT_BLACK);
@@ -316,7 +316,7 @@ void DisplayManager::drawMenuIndicator(const char* selectedActionName, int x, in
 }
 #endif
 
-// showPetMoodText() — draws just the mood label at the given Y position.
+// showPetMoodText(): draws just the mood label at the given Y position.
 // Separated from drawPetSprite() so the Main and Interact screens can place
 // the text at different heights without calling the full showPetMood() path.
 void DisplayManager::showPetMoodText(MoodSprite mood, int textY) {
@@ -325,7 +325,7 @@ void DisplayManager::showPetMoodText(MoodSprite mood, int textY) {
 
     // One label and colour per mood. The cases use the named MoodSprite values
     // (not raw numbers), so this switch reads as the same four moods that
-    // Pet::computeMood() returns — the word under the pet always matches its face.
+    // Pet::computeMood() returns. The word under the pet always matches its face.
     switch (mood) {
         #ifdef ENABLE_MOOD_SPRITES
         case MOOD_HAPPY:  moodText = "Happy";   moodColor = TFT_GREEN;  break;
@@ -341,15 +341,15 @@ void DisplayManager::showPetMoodText(MoodSprite mood, int textY) {
 }
 
 #ifdef ENABLE_MULTISCREEN
-// showPetMood() — draws the mood label at the Stats screen position.
+// showPetMood(): draws the mood label at the Stats screen position.
 // The Stats screen is a pure data view: five stat bars and this mood word,
 // with no pet sprite. Used by renderStatsScreen().
 void DisplayManager::showPetMood(MoodSprite mood) {
     showPetMoodText(mood, MOOD_ZONE.y);
 }
 
-// showPetStatus() — draws all five labelled stat bars using the Stats screen zones.
-// Does not clear the screen — the caller must do that first.
+// showPetStatus(): draws all five labelled stat bars using the Stats screen zones.
+// Does not clear the screen. The caller must do that first.
 void DisplayManager::showPetStatus(int happiness, int fullness, int energy, int cleanliness,
                                    int sick, int hydration, const char* petName) {
     printCenteredText(petName, TITLE_ZONE.y, TFT_YELLOW, 2);
@@ -383,7 +383,7 @@ void DisplayManager::showPetStatus(int happiness, int fullness, int energy, int 
 }
 #endif
 
-// spriteForMood() — returns the pixel data to draw for a given mood and frame.
+// spriteForMood(): returns the pixel data to draw for a given mood and frame.
 // This is the single place that maps a mood to its artwork. Each mood will have
 // its own picture, so this switch is where a new mood gets connected to its
 // sprite (one extra case).
@@ -404,7 +404,7 @@ const uint16_t* DisplayManager::spriteForMood(MoodSprite mood, int frame) {
     }
 }
 
-// drawPetSprite() — draws the pet's face as a bitmap sprite.
+// drawPetSprite(): draws the pet's face as a bitmap sprite.
 // The sprite is centred horizontally on the screen, and its vertical centre
 // is positioned at faceCenterY so each screen can choose where the face sits.
 //
@@ -474,7 +474,7 @@ void DisplayManager::showMessage(const char* message) {
     pushCanvas();
 }
 
-// showDeathScreen() — clears the screen and shows game-over text.
+// showDeathScreen(): clears the screen and shows game-over text.
 // Drawn once when the pet dies (see renderDisplay) and then held until the
 // user restarts, at which point the normal screens redraw on the next frame.
 void DisplayManager::showDeathScreen() {

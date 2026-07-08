@@ -2,7 +2,7 @@
 #define SCREEN_LAYOUT_H
 
 // A struct is a plain bundle of related values with named fields.
-// Unlike a class, it has no methods and no private data — it is just data.
+// Unlike a class, it has no methods and no private data. It is just data.
 // Using a struct here means we can pass a whole zone around as one value,
 // rather than passing four separate integers every time.
 
@@ -23,7 +23,7 @@ struct StatBarZone {
 };
 
 // -----------------------------------------------------------------------
-// ScreenState — which top-level screen the user is currently viewing.
+// ScreenState: which top-level screen the user is currently viewing.
 //
 // An enum (enumeration) is a named list of integer constants. Using one
 // instead of raw numbers (0, 1, 2) makes the code self-documenting: the
@@ -46,14 +46,14 @@ enum ScreenState {
 };
 
 // -----------------------------------------------------------------------
-// RelevantStat — which pet stat is directly affected by a given action.
+// RelevantStat: which pet stat is directly affected by a given action.
 //
 // Each menu action (Feed, Play, Sleep…) changes exactly one stat. Storing
 // this information alongside the action lets DisplayManager pick the right
 // stat bar to highlight on the Interact screen without needing a separate
 // switch statement in every place that asks the question.
 //
-// STAT_NONE is used for Save and Back — actions that do not target a single
+// STAT_NONE is used for Save and Back. Actions that do not target a single
 // stat, so no bar is drawn for them.
 // -----------------------------------------------------------------------
 enum RelevantStat {
@@ -67,7 +67,7 @@ enum RelevantStat {
 };
 
 // -----------------------------------------------------------------------
-// MoodSprite — the four visual moods the pet's sprite can show.
+// MoodSprite: the four visual moods the pet's sprite can show.
 //
 // This is different from PetState (in pet.h), which says what the pet is
 // *doing* (eating, sleeping…). MoodSprite says how the pet *looks* right
@@ -77,7 +77,7 @@ enum RelevantStat {
 //
 // It lives here (not in pet.h) for the same reason as the enums above:
 // DisplayManager must be able to name these moods without knowing what a
-// Pet is, and Pet can include this lightweight header to return one — just
+// Pet is, and Pet can include this lightweight header to return one, just
 // like the action menu includes this header to use RelevantStat. The rule
 // is to keep the dependency pointing this way: Pet -> screen_layout.h, and
 // Display -> screen_layout.h, but never Display -> Pet.
