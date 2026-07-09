@@ -10,6 +10,9 @@
 #ifdef ENABLE_PERSISTENCE
 #include "../Storage/storage_manager.h"
 #endif
+#ifdef ENABLE_SOUND
+#include "../Speaker/speaker_manager.h"
+#endif
 
 class WirelessManager {
 public:
@@ -26,6 +29,11 @@ public:
     // Gives the dashboard a handle on the screen so a "setBrightness" command
     // can adjust the backlight and buildStatsJson can report the current level.
     void setDisplay(DisplayManager& display);
+    #ifdef ENABLE_SOUND
+    // Gives the dashboard a handle on the speaker so "playSong"/"stopSong"
+    // commands can start and stop the non-blocking song player.
+    void setSpeaker(SpeakerManager& speaker);
+    #endif
     bool isResetRequested() const;
     void clearResetRequest();
 
@@ -40,6 +48,9 @@ private:
 
     #ifdef ENABLE_PERSISTENCE
     StorageManager*     storagePtr;
+    #endif
+    #ifdef ENABLE_SOUND
+    SpeakerManager*     speakerPtr;
     #endif
 
     static const unsigned long BROADCAST_INTERVAL = 500;

@@ -16,6 +16,9 @@ WirelessManager::WirelessManager()
     #ifdef ENABLE_PERSISTENCE
       , storagePtr(nullptr)
     #endif
+    #ifdef ENABLE_SOUND
+      , speakerPtr(nullptr)
+    #endif
 {
 }
 
@@ -79,6 +82,12 @@ void WirelessManager::setDisplay(DisplayManager& display) {
     displayPtr = &display;
 }
 
+#ifdef ENABLE_SOUND
+void WirelessManager::setSpeaker(SpeakerManager& speaker) {
+    speakerPtr = &speaker;
+}
+#endif
+
 bool WirelessManager::isResetRequested() const {
     return resetRequested;
 }
@@ -115,6 +124,7 @@ void WirelessManager::processCommand(const String& json) {
     //   {"action":"setBrightness","value":75}
     //   {"action":"save"}
     //   {"action":"reset"}
+    //   {"action":"playSong","song":0}   {"action":"stopSong"}
 
     // Find the action value between "action":" and the next "
     int actionStart = json.indexOf("\"action\":\"");
@@ -136,6 +146,24 @@ void WirelessManager::processCommand(const String& json) {
         #endif
     }
     else if (action == "reset")    { resetRequested = true; }
+    else if (action == "playSong") {
+        #ifdef ENABLE_SOUND
+        // Pull the integer after "song":. Starting a song is non-blocking (it only
+        // sounds the first note), so it is safe to kick off straight from here; the
+        // main loop's updateSong() plays the rest.
+        int songStart = json.indexOf("\"song\":");
+        if (songStart >= 0 && speakerPtr) {
+            songStart += 7; // skip past "song":
+            int id = json.substring(songStart).toInt();
+            speakerPtr->startSong(id);
+        }
+        #endif
+    }
+    else if (action == "stopSong") {
+        #ifdef ENABLE_SOUND
+        if (speakerPtr) speakerPtr->stopSong();
+        #endif
+    }
     else if (action == "setBrightness") {
         // Pull the integer after the "value": key. String::toInt() stops at the first
         // non-digit, so it copes with the trailing } and any whitespace.

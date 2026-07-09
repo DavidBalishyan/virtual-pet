@@ -3,6 +3,7 @@
 #include "../lib/Config/scaffold_config.h"  // The ENABLE_* feature switches. Read this first.
 #include "../lib/Pet/pet.h"
 #include "../lib/Display/display_manager.h"
+#include "../lib/Profiling/cycle_counter.h"
 #include "../lib/Imu/tilt_motion.h"
 #include "../lib/Button/button_handler.h"
 #ifdef ENABLE_ACTION_MENU
@@ -88,9 +89,12 @@ void handleDeathScreen() {
 // printPetStateToSerial(): every few seconds, print the pet's stats to the
 // Serial Monitor so you can watch them change live (and confirm a saved stat
 // reloaded after a power-cycle). Throttled with the same millis() pattern as the
-// stat timers so it does not flood the monitor. Only compiled when DEBUG is on
-// (uncomment the build flag in platformio.ini), then open it with `pio device monitor`.
-void printPetStateToSerial() {
+// stat timers so it does not flood the monitor. renderCycles is the CPU cycle
+// count the last frame's render took (measured with the assembly cycle counter in
+// lib/Profiling), printed so you can see what dominates a frame. Only compiled
+// when DEBUG is on (uncomment the build flag in platformio.ini), then open it
+// with `pio device monitor`.
+void printPetStateToSerial(uint32_t renderCycles) {
     static unsigned long lastPrintTime = 0;
     const unsigned long PRINT_INTERVAL = 3000;  // print once every 3 seconds
 
@@ -99,9 +103,10 @@ void printPetStateToSerial() {
     }
     lastPrintTime = millis();
 
-    Serial.printf("Fullness:%d  Happy:%d  Energy:%d  Clean:%d  Sick:%d  Hydration:%d\n",
+    Serial.printf("Fullness:%d  Happy:%d  Energy:%d  Clean:%d  Sick:%d  Hydration:%d  Render:%lu cyc\n",
                   myPet.getFullness(), myPet.getHappy(), myPet.getEnergised(),
-                  myPet.getCleanliness(), myPet.getSick(), myPet.getHydration());
+                  myPet.getCleanliness(), myPet.getSick(), myPet.getHydration(),
+                  (unsigned long)renderCycles);
 }
 #endif
 
@@ -278,6 +283,10 @@ void setup() {
     wireless.setTimers(timers);
     // Let the dashboard drive the screen backlight and read its current level.
     wireless.setDisplay(display);
+    #ifdef ENABLE_SOUND
+    // Let the dashboard's Music controls start/stop the song player.
+    wireless.setSpeaker(speaker);
+    #endif
     #ifdef ENABLE_PERSISTENCE
     wireless.setStorage(storage);
     #endif
@@ -295,6 +304,11 @@ void loop() {
 
     M5.update();      // Read the latest hardware state (buttons, IMU, etc.)
     buttons.update(); // Detect which buttons were pressed this frame
+    #ifdef ENABLE_SOUND
+    // Advance any dashboard-started song by one note if its slot has elapsed.
+    // Non-blocking, so the pet keeps animating while the tune plays.
+    speaker.updateSong();
+    #endif
     #ifdef ENABLE_WIRELESS
     wireless.handleClient();  // Process any incoming web request
     wireless.broadcastStats();  // Push stats to WebSocket clients
@@ -341,12 +355,17 @@ void loop() {
         updateLivePet();
     }
 
-    // Draw the fully updated state at the end of every frame.
-    renderCurrentScreen();
-
+    // Draw the fully updated state at the end of every frame. Bracket the render
+    // with two CPU cycle-counter reads (see lib/Profiling) so the DEBUG print can
+    // report how many cycles the frame's heavy work actually cost.
     #ifdef DEBUG
-    // Print the pet's stats to the Serial Monitor (throttled) so you can watch
-    // them change live. Open it with `pio device monitor`.
-    printPetStateToSerial();
+    uint32_t renderStart = profiling::readCycleCount();
+    #endif
+    renderCurrentScreen();
+    #ifdef DEBUG
+    uint32_t renderEnd = profiling::readCycleCount();
+    // Print the pet's stats to the Serial Monitor (throttled), now including how
+    // many CPU cycles the render above took. Open it with `pio device monitor`.
+    printPetStateToSerial(profiling::cyclesSince(renderStart, renderEnd));
     #endif
 }

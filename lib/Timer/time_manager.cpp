@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "time_manager.h"
+#include "timer_kernel.h"  // decay-tick arithmetic (assembly on device, C++ fallback)
 
 // Uncomment the next line to build the QUICK-TEST version, where the pet's stats
 // decay fast enough to reach a fatal level in about a minute. Leave it commented
@@ -115,16 +116,9 @@ void TimerManager::update(Pet& pet, time_t currentEpochSecs) {
 // fullness was last decreased. If yes, decreases fullness and resets the timer.
 // The pet gets hungrier (less full) over time whether you feed it or not.
 void TimerManager::applyFullnessDecay(Pet& pet, time_t currentTime) {
-    if (lastFullnessDecayTime == 0) {
-        lastFullnessDecayTime = currentTime;
-        return;
-    }
-    time_t elapsed = currentTime - lastFullnessDecayTime;
-    if (elapsed < 0) { lastFullnessDecayTime = currentTime; return; }
-    if (elapsed >= FULLNESS_DECAY_INTERVAL) {
-        int ticks = elapsed / FULLNESS_DECAY_INTERVAL;
+    int ticks = timing::timerDecayTicks(currentTime, &lastFullnessDecayTime, FULLNESS_DECAY_INTERVAL);
+    if (ticks > 0) {
         pet.setFullness(pet.getFullness() - FULLNESS_DECAY_AMOUNT * ticks);
-        lastFullnessDecayTime = currentTime - (elapsed % FULLNESS_DECAY_INTERVAL);
     }
 }
 
@@ -133,16 +127,9 @@ void TimerManager::applyFullnessDecay(Pet& pet, time_t currentTime) {
 // Checks whether HAPPINESS_DECAY_INTERVAL seconds have passed since
 // happiness was last decreased. If yes, decreases happiness and resets the timer.
 void TimerManager::applyHappinessDecay(Pet& pet, time_t currentTime) {
-    if (lastHappinessDecayTime == 0) {
-        lastHappinessDecayTime = currentTime;
-        return;
-    }
-    time_t elapsed = currentTime - lastHappinessDecayTime;
-    if (elapsed < 0) { lastHappinessDecayTime = currentTime; return; }
-    if (elapsed >= HAPPINESS_DECAY_INTERVAL) {
-        int ticks = elapsed / HAPPINESS_DECAY_INTERVAL;
+    int ticks = timing::timerDecayTicks(currentTime, &lastHappinessDecayTime, HAPPINESS_DECAY_INTERVAL);
+    if (ticks > 0) {
         pet.setHappy(pet.getHappy() - HAPPINESS_DECAY_AMOUNT * ticks);
-        lastHappinessDecayTime = currentTime - (elapsed % HAPPINESS_DECAY_INTERVAL);
     }
 }
 
@@ -151,16 +138,9 @@ void TimerManager::applyHappinessDecay(Pet& pet, time_t currentTime) {
 // Checks whether ENERGY_DRAIN_INTERVAL seconds have passed since
 // energy was last decreased. If yes, decreases energy and resets the timer.
 void TimerManager::applyEnergyDrain(Pet& pet, time_t currentTime) {
-    if (lastEnergyDrainTime == 0) {
-        lastEnergyDrainTime = currentTime;
-        return;
-    }
-    time_t elapsed = currentTime - lastEnergyDrainTime;
-    if (elapsed < 0) { lastEnergyDrainTime = currentTime; return; }
-    if (elapsed >= ENERGY_DRAIN_INTERVAL) {
-        int ticks = elapsed / ENERGY_DRAIN_INTERVAL;
+    int ticks = timing::timerDecayTicks(currentTime, &lastEnergyDrainTime, ENERGY_DRAIN_INTERVAL);
+    if (ticks > 0) {
         pet.setEnergised(pet.getEnergised() - ENERGY_DRAIN_AMOUNT * ticks);
-        lastEnergyDrainTime = currentTime - (elapsed % ENERGY_DRAIN_INTERVAL);
     }
 }
 
@@ -170,16 +150,9 @@ void TimerManager::applyEnergyDrain(Pet& pet, time_t currentTime) {
 // cleanliness was last decreased. If yes, decreases cleanliness and resets the timer.
 // The pet gets dirty over time. Bathing is the only way to keep it clean.
 void TimerManager::applyCleanlinessDecay(Pet& pet, time_t currentTime) {
-    if (lastCleanlinessDecayTime == 0) {
-        lastCleanlinessDecayTime = currentTime;
-        return;
-    }
-    time_t elapsed = currentTime - lastCleanlinessDecayTime;
-    if (elapsed < 0) { lastCleanlinessDecayTime = currentTime; return; }
-    if (elapsed >= CLEANLINESS_DECAY_INTERVAL) {
-        int ticks = elapsed / CLEANLINESS_DECAY_INTERVAL;
+    int ticks = timing::timerDecayTicks(currentTime, &lastCleanlinessDecayTime, CLEANLINESS_DECAY_INTERVAL);
+    if (ticks > 0) {
         pet.setCleanliness(pet.getCleanliness() - CLEANLINESS_DECAY_AMOUNT * ticks);
-        lastCleanlinessDecayTime = currentTime - (elapsed % CLEANLINESS_DECAY_INTERVAL);
     }
 }
 
@@ -188,17 +161,19 @@ void TimerManager::applyCleanlinessDecay(Pet& pet, time_t currentTime) {
 // Increases sick only when cleanliness has fallen below CLEANLINESS_DANGER_THRESHOLD.
 // A dirty pet gradually becomes unwell. The user must bathe it to stop this.
 void TimerManager::applySicknessAccumulation(Pet& pet, time_t currentTime) {
+    // First-run anchoring happens unconditionally (even while clean), matching the
+    // original, so the timer is never left at 0 waiting for the pet to get dirty.
     if (lastSicknessAccumulationTime == 0) {
         lastSicknessAccumulationTime = currentTime;
         return;
     }
+    // Sickness only builds up while the pet is dirty. When it is clean the kernel
+    // is not called, so the timer stays frozen exactly as before.
     if (pet.getCleanliness() < CLEANLINESS_DANGER_THRESHOLD) {
-        time_t elapsed = currentTime - lastSicknessAccumulationTime;
-        if (elapsed < 0) { lastSicknessAccumulationTime = currentTime; return; }
-        if (elapsed >= SICKNESS_ACCUMULATION_INTERVAL) {
-            int ticks = elapsed / SICKNESS_ACCUMULATION_INTERVAL;
+        int ticks = timing::timerDecayTicks(currentTime, &lastSicknessAccumulationTime,
+                                            SICKNESS_ACCUMULATION_INTERVAL);
+        if (ticks > 0) {
             pet.setSick(pet.getSick() + SICKNESS_ACCUMULATION_AMOUNT * ticks);
-            lastSicknessAccumulationTime = currentTime - (elapsed % SICKNESS_ACCUMULATION_INTERVAL);
         }
     }
 }
@@ -209,16 +184,9 @@ void TimerManager::applySicknessAccumulation(Pet& pet, time_t currentTime) {
 // hydration was last decreased. If yes, decreases hydration and resets the timer.
 // The pet gets thirstier over time whether you give it water or not.
 void TimerManager::applyHydrationDecay(Pet& pet, time_t currentTime) {
-    if (lastHydrationDecayTime == 0) {
-        lastHydrationDecayTime = currentTime;
-        return;
-    }
-    time_t elapsed = currentTime - lastHydrationDecayTime;
-    if (elapsed < 0) { lastHydrationDecayTime = currentTime; return; }
-    if (elapsed >= HYDRATION_DECAY_INTERVAL) {
-        int ticks = elapsed / HYDRATION_DECAY_INTERVAL;
+    int ticks = timing::timerDecayTicks(currentTime, &lastHydrationDecayTime, HYDRATION_DECAY_INTERVAL);
+    if (ticks > 0) {
         pet.setHydration(pet.getHydration() - HYDRATION_DECAY_AMOUNT * ticks);
-        lastHydrationDecayTime = currentTime - (elapsed % HYDRATION_DECAY_INTERVAL);
     }
 }
 

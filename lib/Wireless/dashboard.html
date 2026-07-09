@@ -35,6 +35,21 @@
   </div>
 
   <div class="section">
+    <h2>Music</h2>
+    <!-- data-song values are song ids; they must match the SONGS order in
+         lib/Speaker/speaker_manager.cpp. -->
+    <div class="action-grid">
+      <button class="action-btn song" data-song="0">Twinkle</button>
+      <button class="action-btn song" data-song="1">Ode to Joy</button>
+      <button class="action-btn song" data-song="2">Mario</button>
+      <button class="action-btn song" data-song="3">F&uuml;r Elise</button>
+    </div>
+    <div class="action-row">
+      <button class="action-btn stop-song" data-stop-song>Stop</button>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>Display</h2>
     <div class="brightness-row">
       <input type="range" id="brightnessSlider" min="0" max="100" value="100">

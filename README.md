@@ -59,6 +59,17 @@ Every module has one job. The menu doesn't draw. The display doesn't know what a
 
 ---
 
+## A little assembly
+
+Two small, hot pieces are written by hand in Xtensa assembly, each with a plain C++ twin that does the same job:
+
+- **The decay kernel** (`lib/Timer/timer_kernel`) - the integer maths every stat-decay rule shares: how many whole intervals have passed since a timer last fired. `platformio.ini` sets `-DUSE_ASM_TIMER` to run the assembly version on the device. Drop the flag and it falls back to C++, so you can compare the two on the same hardware.
+- **The cycle counter** (`lib/Profiling`) - reads the ESP32's `CCOUNT` register, a per-cycle hardware counter with no C equivalent, so reading it really does need one assembly instruction. Under `DEBUG` the loop wraps each render with it and prints how many CPU cycles the frame cost over serial, which is how you A/B those two decay kernels.
+
+The C++ version is the reference. On your PC it's the only one that runs: the assembly is guarded by `__XTENSA__`, so a host build compiles it to nothing. The unit tests lock down the behaviour the assembly has to match.
+
+---
+
 ## Feature switches
 
 The project is a cumulative curriculum. Every major feature is wrapped in an `#ifdef`:
@@ -96,10 +107,12 @@ No router or internet needed - the pet is the server. Implementation is in `lib/
 pio test -e native
 ```
 
-Three suites cover the hardware-independent bits:
+Five suites cover the hardware-independent bits:
 - **test_pet** (35 tests) - stats, actions, state machine, moods, death, reset
 - **test_animation_manager** (8 tests) - frame cycling, wrap-around, reset
 - **test_tilt_motion** (8 tests) - smoothing, clamping, self-recentre
+- **test_timer_kernel** (6 tests) - decay-tick arithmetic (the C++ kernel the assembly must match)
+- **test_cycle_counter** (4 tests) - the profiling counter's fallback and wrap-safe subtraction
 
 The tests compile the real source files against a stub `Arduino.h` so they run on a PC.
 

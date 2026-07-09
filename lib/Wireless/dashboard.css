@@ -113,6 +113,8 @@ h1 {
 .action-btn.save    { background: #f39c12; }
 .action-btn.reset   { background: #555; }
 .action-btn.danger  { background: #c0392b; }
+.action-btn.song      { background: #8e44ad; }
+.action-btn.stop-song { background: #555; }
 
 /* Name editor */
 .name-row {
