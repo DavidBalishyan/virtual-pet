@@ -3,6 +3,7 @@ name: virtual-pet-dev
 packages:
   - python3-pip
   - python3-venv
+  - pipx
   - clang-format-19
   - clang-tidy-19
   - cppcheck

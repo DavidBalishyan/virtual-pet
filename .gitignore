@@ -5,6 +5,7 @@ docs/
 .vscode/launch.json
 .vscode/ipch
 .DS_Store
+.cache/
 tools/piskel_converter/piskel_converter
 
 # Ignore build files/directories

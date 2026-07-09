@@ -1,0 +1,122 @@
+[
+    {
+        "command": "/usr/bin/g++ -o .pio/build/native/lib382/Button/button_handler.o -c -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Button -Itest/stubs lib/Button/button_handler.cpp",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Button/button_handler.cpp",
+        "output": ".pio/build/native/lib382/Button/button_handler.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/native/lib533/Display/animation_manager.o -c -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Display -Ilib/Config -Itest/stubs lib/Display/animation_manager.cpp",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Display/animation_manager.cpp",
+        "output": ".pio/build/native/lib533/Display/animation_manager.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/native/lib533/Display/display_manager.o -c -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Display -Ilib/Config -Itest/stubs lib/Display/display_manager.cpp",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Display/display_manager.cpp",
+        "output": ".pio/build/native/lib533/Display/display_manager.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/native/lib0f4/Speaker/speaker_manager.o -c -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Speaker -Itest/stubs lib/Speaker/speaker_manager.cpp",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Speaker/speaker_manager.cpp",
+        "output": ".pio/build/native/lib0f4/Speaker/speaker_manager.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/native/lib4e4/Pet/pet.o -c -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Pet -Ilib/Speaker -Ilib/Display -Ilib/Config -Itest/stubs lib/Pet/pet.cpp",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Pet/pet.cpp",
+        "output": ".pio/build/native/lib4e4/Pet/pet.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/native/lib5d6/Timer/time_manager.o -c -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Timer -Ilib/Pet -Ilib/Speaker -Ilib/Display -Ilib/Config -Itest/stubs lib/Timer/time_manager.cpp",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Timer/time_manager.cpp",
+        "output": ".pio/build/native/lib5d6/Timer/time_manager.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/native/lib5d6/Timer/timer_kernel.o -c -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Timer -Ilib/Pet -Ilib/Speaker -Ilib/Display -Ilib/Config -Itest/stubs lib/Timer/timer_kernel.cpp",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Timer/timer_kernel.cpp",
+        "output": ".pio/build/native/lib5d6/Timer/timer_kernel.o"
+    },
+    {
+        "command": "/usr/bin/gcc -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Timer -Ilib/Pet -Ilib/Speaker -Ilib/Display -Ilib/Config -Itest/stubs -c -o .pio/build/native/lib5d6/Timer/timer_kernel_asm.o lib/Timer/timer_kernel_asm.S",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Timer/timer_kernel_asm.S",
+        "output": ".pio/build/native/lib5d6/Timer/timer_kernel_asm.o"
+    },
+    {
+        "command": "/usr/bin/gcc -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Timer -Ilib/Pet -Ilib/Speaker -Ilib/Display -Ilib/Config -Itest/stubs -c -o .pio/build/native/lib5d6/Timer/timer_kernel_asm.o lib/Timer/timer_kernel_asm.S",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Timer/timer_kernel_asm.S",
+        "output": ".pio/build/native/lib5d6/Timer/timer_kernel_asm.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/native/lib531/Storage/storage_manager.o -c -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Storage -Ilib/Timer -Ilib/Pet -Ilib/Speaker -Ilib/Display -Ilib/Config -Itest/stubs lib/Storage/storage_manager.cpp",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Storage/storage_manager.cpp",
+        "output": ".pio/build/native/lib531/Storage/storage_manager.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/native/lib319/Actions/action_menu.o -c -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Actions -Ilib/Storage -Ilib/Timer -Ilib/Pet -Ilib/Speaker -Ilib/Display -Ilib/Config -Ilib/Button -Itest/stubs lib/Actions/action_menu.cpp",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Actions/action_menu.cpp",
+        "output": ".pio/build/native/lib319/Actions/action_menu.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/native/lib656/Clock/clock_manager.o -c -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Clock -Itest/stubs lib/Clock/clock_manager.cpp",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Clock/clock_manager.cpp",
+        "output": ".pio/build/native/lib656/Clock/clock_manager.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/native/lib8ea/Imu/imu_manager.o -c -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Imu -Itest/stubs lib/Imu/imu_manager.cpp",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Imu/imu_manager.cpp",
+        "output": ".pio/build/native/lib8ea/Imu/imu_manager.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/native/lib8ea/Imu/tilt_motion.o -c -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Imu -Itest/stubs lib/Imu/tilt_motion.cpp",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Imu/tilt_motion.cpp",
+        "output": ".pio/build/native/lib8ea/Imu/tilt_motion.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/native/lib0c6/Navigation/navigation_manager.o -c -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Navigation -Ilib/Display -Ilib/Config -Ilib/Button -Itest/stubs lib/Navigation/navigation_manager.cpp",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Navigation/navigation_manager.cpp",
+        "output": ".pio/build/native/lib0c6/Navigation/navigation_manager.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/native/lib2c5/Profiling/cycle_counter.o -c -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Profiling -Itest/stubs lib/Profiling/cycle_counter.cpp",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Profiling/cycle_counter.cpp",
+        "output": ".pio/build/native/lib2c5/Profiling/cycle_counter.o"
+    },
+    {
+        "command": "/usr/bin/gcc -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Profiling -Itest/stubs -c -o .pio/build/native/lib2c5/Profiling/cycle_counter_asm.o lib/Profiling/cycle_counter_asm.S",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Profiling/cycle_counter_asm.S",
+        "output": ".pio/build/native/lib2c5/Profiling/cycle_counter_asm.o"
+    },
+    {
+        "command": "/usr/bin/gcc -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Profiling -Itest/stubs -c -o .pio/build/native/lib2c5/Profiling/cycle_counter_asm.o lib/Profiling/cycle_counter_asm.S",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Profiling/cycle_counter_asm.S",
+        "output": ".pio/build/native/lib2c5/Profiling/cycle_counter_asm.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/native/libed6/Wireless/wireless_manager.o -c -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Ilib/Wireless -Ilib/Storage -Ilib/Timer -Ilib/Pet -Ilib/Speaker -Ilib/Display -Ilib/Config -Itest/stubs lib/Wireless/wireless_manager.cpp",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "lib/Wireless/wireless_manager.cpp",
+        "output": ".pio/build/native/libed6/Wireless/wireless_manager.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/native/src/main.o -c -DPLATFORMIO=60119 -DENABLE_MOOD_SPRITES -DENABLE_SOUND -DENABLE_MULTISCREEN -DENABLE_ACTION_MENU -Isrc -Ilib/Wireless -Ilib/Profiling -Ilib/Navigation -Ilib/Imu -Ilib/Clock -Ilib/Actions -Ilib/Storage -Ilib/Timer -Ilib/Pet -Ilib/Speaker -Ilib/Display -Ilib/Config -Ilib/Button -Itest/stubs src/main.cpp",
+        "directory": "/home/david/development/tumo/virtual-pet",
+        "file": "src/main.cpp",
+        "output": ".pio/build/native/src/main.o"
+    }
+]
